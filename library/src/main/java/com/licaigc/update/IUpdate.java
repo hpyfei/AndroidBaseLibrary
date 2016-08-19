@@ -1,5 +1,6 @@
 package com.licaigc.update;
 
+import retrofit2.Response;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 import rx.Observable;
@@ -10,5 +11,5 @@ import rx.Observable;
  */
 public interface IUpdate {
     @GET("update/check")
-    Observable<ResponseCheckUpdate> checkUpdate(@Query("pkg_name") String pkgName, @Query("version") String versionName, @Query("platform") int platform, @Query("channel") String channel);
+    Observable<Response<ResponseCheckUpdate>> checkUpdate(@Query("pkg_name") String pkgName, @Query("version") String versionName, @Query("platform") int platform, @Query("channel") String channel);
 }

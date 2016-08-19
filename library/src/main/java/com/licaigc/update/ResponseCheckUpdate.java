@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
  * Created by walfud on 2016/7/28.
  */
 public class ResponseCheckUpdate {
-    public int code;
     public String message;
 
     public Data data;

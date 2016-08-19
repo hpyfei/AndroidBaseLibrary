@@ -1,7 +1,8 @@
-package com.licaigc.statistics;
+package com.licaigc.trace;
 
 import android.os.Build;
 
+import com.licaigc.Constants;
 import com.licaigc.DeviceInfo;
 import com.licaigc.ManifestUtils;
 import com.licaigc.PackageUtils;
@@ -17,31 +18,31 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
- * 由于名字比较生僻, 我将于 1.0 版本废弃此对象
- *
- * Created by walfud on 2016/7/7.
- * @deprecated use {@link com.licaigc.trace.Trace} instead
+ * 统计, 打点相关
+ * Created by walfud on 2016/8/19.
  */
-public class Statistics {
-    public static final String TAG = "Statistics";
+public class Trace {
+    public static final String TAG = "Trace";
 
-    public static final int OS_ANDROID = 1;
-    public static final int OS_IOS = 2;
-    public static final int OS_UNKNOWN = 3;
+    private static final String URL = "http://c.lcgc.pub/r/app";
 
-    public static final int APP_ID_TALICAI = 1;
-    public static final int APP_ID_GUIHUA = 2;
-    public static final int APP_ID_TIMI = 3;
-    public static final int APP_ID_JIJINDOU = 4;
+    // Function
+    public static void startupInfo() {
+        // TODO: 这里只上传基本信息么?
+        Map<String, String> params = getBasicInfo();
+        request(params);
+    }
+
+    // internal
 
     /**
-     * @deprecated use {@link com.licaigc.trace.Trace#startupInfo}
-     * @param appId
+     *
+     * @return
      */
-    public static void reportStartupInfo(int appId) {
-        final String REPORT_URL = "http://c.lcgc.pub/r/app";
-        Map<String, String> params = Transformer.asMap(
-                "os", String.valueOf(OS_ANDROID),
+    private static Map<String, String> getBasicInfo() {
+        // TODO: 新家了几个参数, 应该补充道
+        return Transformer.asMap(
+                "os", String.valueOf(Constants.OS_ANDROID),
                 "osversion", Build.VERSION.RELEASE,
                 "mac", DeviceInfo.getMacAddress(),
                 "imei", DeviceInfo.getImei(),
@@ -51,8 +52,11 @@ public class Statistics {
                 "buildcode", String.valueOf(PackageUtils.getVersionCode()),
                 "channel", ManifestUtils.getMeta("UMENG_CHANNEL"),
                 "ip", DeviceInfo.getIpAddress(),
-                "site", String.valueOf(appId)
+                "site", String.valueOf(Constants.APP_ID)
         );
+    }
+
+    private static void request(Map<String, String> params) {
         final String param = Transformer.map2HttpGetParam(params, true, Transformer.MAP2HTTPGETPARAM_SKIP_EMPTY);
         Observable.<Void>just(null)
                 .observeOn(Schedulers.io())
@@ -61,7 +65,7 @@ public class Statistics {
                     public Void call(Void aVoid) {
                         HttpURLConnection urlConnection = null;
                         try {
-                            urlConnection = (HttpURLConnection) new URL(String.format("%s/?%s", REPORT_URL, param)).openConnection();
+                            urlConnection = (HttpURLConnection) new URL(String.format("%s/?%s", URL, param)).openConnection();
                             urlConnection.setRequestMethod("GET");
                             urlConnection.getResponseCode();
                         } catch (Exception e) {

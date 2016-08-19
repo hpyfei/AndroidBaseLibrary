@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.licaigc.AndroidBaseLibrary;
-import com.licaigc.ManifestUtils;
 import com.licaigc.PackageUtils;
 import com.licaigc.PermissionUtils;
 import com.licaigc.library.R;
@@ -24,6 +23,7 @@ import com.licaigc.view.ViewUtils;
 import java.io.File;
 
 import okhttp3.OkHttpClient;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -42,7 +42,7 @@ public class UpdateUtils {
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
         Retrofit retrofit = new Retrofit.Builder()
                 .client(okHttpClient)
-                .baseUrl(String.format("%s/v%s/", "http://192.168.10.115:34000", 1))
+                .baseUrl(String.format("%s/v%s/", "http://192.168.8.21:34000", 1))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -72,29 +72,38 @@ public class UpdateUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        updateInterface.checkUpdate(pkgName, packageInfo.versionName, packageInfo.versionCode, ManifestUtils.getMeta("UMENG_CHANNEL"))
-//        updateInterface.checkUpdate("com.talicai.timiclient", "2.3.4", 1, "anzhuoshichang")
+//        updateInterface.checkUpdate(pkgName, packageInfo.versionName, packageInfo.versionCode, ManifestUtils.getMeta("UMENG_CHANNEL"))
+        updateInterface.checkUpdate("com.talicai.timiclient", "2.3.4", 1, "anzhuoshichang")
                 .subscribeOn(Schedulers.io())
-                .concatMap(new Func1<ResponseCheckUpdate, Observable<ResponseCheckUpdate>>() {
+                .concatMap(new Func1<Response<ResponseCheckUpdate>, Observable<ResponseCheckUpdate>>() {
                     @Override
-                    public Observable<ResponseCheckUpdate> call(final ResponseCheckUpdate responseCheckUpdate) {
+                    public Observable<ResponseCheckUpdate> call(final Response<ResponseCheckUpdate> response) {
                         // 返回值详情: http://www.tuluu.com/platform/ymir/wikis/home
-                        if (8400 <= responseCheckUpdate.code && responseCheckUpdate.code < 8500) {
-                            // 提示用户错误
-                            throw new RuntimeException(responseCheckUpdate.message);
-                        }
-
-                        if (responseCheckUpdate.code == 8202
-                                || responseCheckUpdate.code == 8203) {
+                        if (response.code() == 200) {
+                            // 没更新
+                        } else if (response.code() == 222) {
                             // 有更新
+                            final ResponseCheckUpdate responseCheckUpdate = response.body();
                             return NetworkUtils.get(responseCheckUpdate.data.image)
                                     .map(new Func1<byte[], ResponseCheckUpdate>() {
                                         @Override
                                         public ResponseCheckUpdate call(byte[] bytes) {
-                                            responseCheckUpdate.data.pic = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                            try {
+                                                responseCheckUpdate.data.pic = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
                                             return responseCheckUpdate;
                                         }
                                     });
+                        } else if (response.code() == 400) {
+                            throw new RuntimeException(response.body().message);
+                        } else if (response.code() == 500){
+                            // 服务器内部错误
+                            throw new RuntimeException("服务器正在维护, 请稍后再试...");
+                        } else {
+                            // 不支持的 status code 或者
+                            throw new RuntimeException(String.format("不支持的 status code (%d)", response.code()));
                         }
 
                         return Observable.empty();
