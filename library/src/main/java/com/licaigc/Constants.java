@@ -34,8 +34,7 @@ public class Constants {
     );
 
     /**
-     * 根据当前包名返回整数 id. 如果该应用不存在于 {@link #PKG_ID} 中, 则返回 0.
-     * @return
+     * @return 根据当前包名返回整数 id. 如果该应用不存在于 {@link #PKG_ID} 中, 则返回 0.
      */
     private static int getAppId() {
         String pkgName = AndroidBaseLibrary.getContext().getPackageName();
