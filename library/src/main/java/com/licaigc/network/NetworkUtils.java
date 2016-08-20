@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
 
@@ -317,6 +319,29 @@ public class NetworkUtils {
                 cursor.close();
             }
         }, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+    }
+
+    // Network Type
+
+    /**
+     * 返回当前联网类型
+     * 需要 `android.permission.ACCESS_NETWORK_STATE` 权限
+     * @return -1: 没网, 0: 移动网络, 1: wifi
+     * @see {@link ConnectivityManager#TYPE_MOBILE}
+     * @see {@link ConnectivityManager#TYPE_WIFI}
+     */
+    public static int getNetworkType() {
+        ConnectivityManager connMgr = (ConnectivityManager) AndroidBaseLibrary.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isAvailable() ? networkInfo.getType() : -1;
+    }
+
+    public static boolean isWifiConnected() {
+        return getNetworkType() == ConnectivityManager.TYPE_WIFI;
+    }
+
+    public static boolean isNetworkAvailable() {
+        return getNetworkType() != -1;
     }
 
     //
