@@ -10,8 +10,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
+import android.telephony.TelephonyManager;
 
 import com.licaigc.AndroidBaseLibrary;
+import com.licaigc.Constants;
 import com.licaigc.PermissionUtils;
 import com.licaigc.algorithm.hash.HashUtils;
 import com.licaigc.io.IoUtils;
@@ -322,30 +324,80 @@ public class NetworkUtils {
     }
 
     // Network Type
+    public static boolean isNetworkAvailable() {
+        return getNetworkType() != Constants.NETWORK_NONE;
+    }
+    public static boolean isWifiConnected() {
+        return getNetworkType() == Constants.NETWORK_WIFI;
+    }
+    public static boolean isMobileConnected() {
+        return getNetworkType() == Constants.NETWORK_2G
+                || getNetworkType() == Constants.NETWORK_3G
+                || getNetworkType() == Constants.NETWORK_4G
+                || getNetworkType() == Constants.NETWORK_5G;
+    }
 
     /**
      * 返回当前联网类型
-     * 需要 `android.permission.ACCESS_NETWORK_STATE` 权限
-     * @return -1: 没网, 0: 移动网络, 1: wifi
-     * @see {@link ConnectivityManager#TYPE_MOBILE}
-     * @see {@link ConnectivityManager#TYPE_WIFI}
+     * @return 0: 失败, 2: 2G, 3: 3G, 4: 4G
+     * @see {@link Constants#NETWORK_NONE}
+     * @see {@link Constants#NETWORK_WIFI}
+     * @see {@link Constants#NETWORK_2G}
+     * @see {@link Constants#NETWORK_3G}
+     * @see {@link Constants#NETWORK_4G}
+     * @see {@link Constants#NETWORK_5G}
+     * @see <a href="http://stackoverflow.com/questions/9283765/how-to-determine-if-network-type-is-2g-3g-or-4g">How to determine if network type is 2G, 3G or 4G (Stackoverflow)</a>
      */
     public static int getNetworkType() {
         if (!PermissionUtils.hasPermission("android.permission.ACCESS_NETWORK_STATE")) {
-            return -1;
+            return Constants.NETWORK_NONE;
         }
 
         ConnectivityManager connMgr = (ConnectivityManager) AndroidBaseLibrary.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isAvailable() ? networkInfo.getType() : -1;
-    }
+        if (networkInfo == null
+                || !networkInfo.isAvailable()
+                || !networkInfo.isConnected()) {
+            return Constants.NETWORK_NONE;
+        }
 
-    public static boolean isWifiConnected() {
-        return getNetworkType() == ConnectivityManager.TYPE_WIFI;
-    }
+        switch (networkInfo.getType()) {
+            case ConnectivityManager.TYPE_WIFI:
+                return Constants.NETWORK_WIFI;
 
-    public static boolean isNetworkAvailable() {
-        return getNetworkType() != -1;
+            case ConnectivityManager.TYPE_MOBILE: {
+                TelephonyManager mTelephonyManager = (TelephonyManager) AndroidBaseLibrary.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+                int networkType = mTelephonyManager.getNetworkType();
+                switch (networkType) {
+                    case TelephonyManager.NETWORK_TYPE_GPRS:
+                    case TelephonyManager.NETWORK_TYPE_EDGE:
+                    case TelephonyManager.NETWORK_TYPE_CDMA:
+                    case TelephonyManager.NETWORK_TYPE_1xRTT:
+                    case TelephonyManager.NETWORK_TYPE_IDEN:
+                        return Constants.NETWORK_2G;
+
+                    case TelephonyManager.NETWORK_TYPE_UMTS:
+                    case TelephonyManager.NETWORK_TYPE_EVDO_0:
+                    case TelephonyManager.NETWORK_TYPE_EVDO_A:
+                    case TelephonyManager.NETWORK_TYPE_HSDPA:
+                    case TelephonyManager.NETWORK_TYPE_HSUPA:
+                    case TelephonyManager.NETWORK_TYPE_HSPA:
+                    case TelephonyManager.NETWORK_TYPE_EVDO_B:
+                    case TelephonyManager.NETWORK_TYPE_EHRPD:
+                    case TelephonyManager.NETWORK_TYPE_HSPAP:
+                        return Constants.NETWORK_3G;
+
+                    case TelephonyManager.NETWORK_TYPE_LTE:
+                        return Constants.NETWORK_4G;
+
+                    default:
+                        return Constants.NETWORK_NONE;
+                }
+            }
+
+            default:
+                return Constants.NETWORK_NONE;
+        }
     }
 
     //

@@ -20,6 +20,7 @@ public class AndroidBaseLibrary {
      */
     public static final boolean initialize(Context context) {
         sContext = context.getApplicationContext();
+        Constants.APP_ID = Constants.getAppId();
 
         return true;
     }

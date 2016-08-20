@@ -330,6 +330,10 @@ public class Transformer {
     }
 
     /**
+     * Keep all param even if the value is `null` of empty.
+     */
+    public static final int MAP2HTTPGETPARAM_KEEP_ALL = 0;
+    /**
      * Skip the param if value is `null`.
      */
     public static final int MAP2HTTPGETPARAM_SKIP_NULL = 1;

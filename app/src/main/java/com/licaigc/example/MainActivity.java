@@ -4,10 +4,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.licaigc.AndroidBaseLibrary;
-import com.licaigc.update.UpdateUtils;
+import com.licaigc.trace.Track;
 
 public class MainActivity extends Activity {
     public static final String TAG = "MainActivity";
@@ -22,12 +21,13 @@ public class MainActivity extends Activity {
         mBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UpdateUtils.checkUpdate(MainActivity.this, "123", new UpdateUtils.OnCheckUpdate() {
-                    @Override
-                    public void onFinish(boolean okOrCancel) {
-                        Toast.makeText(MainActivity.this, String.valueOf(okOrCancel), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                Track.onLogout("1234");
+//                UpdateUtils.checkUpdate(MainActivity.this, "123", new UpdateUtils.OnCheckUpdate() {
+//                    @Override
+//                    public void onFinish(boolean okOrCancel) {
+//                        Toast.makeText(MainActivity.this, String.valueOf(okOrCancel), Toast.LENGTH_SHORT).show();
+//                    }
+//                });
             }
         });
 
