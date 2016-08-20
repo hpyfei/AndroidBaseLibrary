@@ -6,6 +6,8 @@ import com.licaigc.Constants;
 import com.licaigc.DeviceInfo;
 import com.licaigc.ManifestUtils;
 import com.licaigc.PackageUtils;
+import com.licaigc.TraceAction;
+import com.licaigc.TransactionStatus;
 import com.licaigc.Transformer;
 
 import java.net.HttpURLConnection;
@@ -27,9 +29,74 @@ public class Trace {
     private static final String URL = "http://c.lcgc.pub/r/app";
 
     // Function
-    public static void startupInfo() {
+    public static void onActivate() {
         // TODO: 这里只上传基本信息么?
         Map<String, String> params = getBasicInfo();
+        request(params);
+    }
+
+    public  static  void  onLogin(String userId) {
+        if (userId == null) {
+            return;
+        }
+
+        Map<String, String> params = getBasicInfo();
+        params.put("action", TraceAction.LOGIN.toString());
+        params.put("role",userId);
+        request(params);
+    }
+
+    public  static  void  onRegist(String userId) {
+        if (userId == null) {
+            return;
+        }
+
+        Map<String, String> params = getBasicInfo();
+        params.put("action", TraceAction.REGIST.toString());
+        params.put("role",userId);
+        request(params);
+    }
+
+    public  static  void  onLogout(String userId) {
+        if (userId == null) {
+            return;
+        }
+
+        Map<String, String> params = getBasicInfo();
+        params.put("action", TraceAction.REGIST.toString());
+        params.put("role",userId);
+        request(params);
+    }
+
+    public static  void  onPurchase(String userId,String productId,double shares, double cost,TransactionStatus status) {
+        if (userId == null || productId == null) {
+            return;
+        }
+
+        Map<String, String> params = getBasicInfo();
+        params.put("action", TraceAction.PURCHASE.toString());
+        params.put("role",userId);
+        params.put("target",productId);
+        params.put("shares",String.valueOf(shares));
+        params.put("cost",String.valueOf(cost));
+        params.put("status",String.valueOf(status));
+
+        request(params);
+    }
+
+
+    public static  void  onRedeem(String userId,String productId,double shares, double cost,TransactionStatus status) {
+        if (userId == null || productId == null) {
+            return;
+        }
+
+        Map<String, String> params = getBasicInfo();
+        params.put("action", TraceAction.REDEEM.toString());
+        params.put("role",userId);
+        params.put("target",productId);
+        params.put("shares",String.valueOf(shares));
+        params.put("cost",String.valueOf(cost));
+        params.put("status",String.valueOf(status));
         request(params);
     }
 
@@ -52,7 +119,12 @@ public class Trace {
                 "buildcode", String.valueOf(PackageUtils.getVersionCode()),
                 "channel", ManifestUtils.getMeta("UMENG_CHANNEL"),
                 "ip", DeviceInfo.getIpAddress(),
-                "site", String.valueOf(Constants.APP_ID)
+                "site", String.valueOf(Constants.APP_ID),
+                "lbs","",
+                "network","",
+                "osname","",
+                "timestamp",""
+
         );
     }
 
