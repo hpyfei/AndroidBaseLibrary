@@ -331,6 +331,10 @@ public class NetworkUtils {
      * @see {@link ConnectivityManager#TYPE_WIFI}
      */
     public static int getNetworkType() {
+        if (!PermissionUtils.hasPermission("android.permission.ACCESS_NETWORK_STATE")) {
+            return -1;
+        }
+
         ConnectivityManager connMgr = (ConnectivityManager) AndroidBaseLibrary.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isAvailable() ? networkInfo.getType() : -1;
