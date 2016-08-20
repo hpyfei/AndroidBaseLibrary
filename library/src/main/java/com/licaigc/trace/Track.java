@@ -23,8 +23,8 @@ import rx.schedulers.Schedulers;
  * 统计, 打点相关
  * Created by walfud on 2016/8/19.
  */
-public class Trace {
-    public static final String TAG = "Trace";
+public class Track {
+    public static final String TAG = "Track";
 
     private static final String URL = "http://c.lcgc.pub/r/app";
 

@@ -6,6 +6,7 @@ import com.licaigc.DeviceInfo;
 import com.licaigc.ManifestUtils;
 import com.licaigc.PackageUtils;
 import com.licaigc.Transformer;
+import com.licaigc.trace.Track;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -20,7 +21,7 @@ import rx.schedulers.Schedulers;
  * 由于名字比较生僻, 我将于 1.0 版本废弃此对象
  *
  * Created by walfud on 2016/7/7.
- * @deprecated use {@link com.licaigc.trace.Trace} instead
+ * @deprecated use {@link Track} instead
  */
 public class Statistics {
     public static final String TAG = "Statistics";
@@ -35,7 +36,7 @@ public class Statistics {
     public static final int APP_ID_JIJINDOU = 4;
 
     /**
-     * @deprecated use {@link com.licaigc.trace.Trace#startupInfo}
+     * @deprecated use {@link Track#onActivate()}
      * @param appId
      */
     public static void reportStartupInfo(int appId) {
