@@ -34,7 +34,7 @@ public class Constants {
             "com.talicai.talicaiclient",        Constants.APP_ID_TALICAI,
             "com.haoguihua.app",                Constants.APP_ID_GUIHUA,
             "com.talicai.timiclient",           Constants.APP_ID_TIMI,
-            "com.talicai.fund",                 Constants.APP_ID_JIJINDOU,
+            "com.jijindou.android.fund",        Constants.APP_ID_JIJINDOU,
 
             "com.licaigc.androidbaselibrary",   Constants.APP_ID_TALICAI           // Debug
     );
