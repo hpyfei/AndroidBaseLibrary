@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.licaigc.AndroidBaseLibrary;
+import com.licaigc.ManifestUtils;
 import com.licaigc.PackageUtils;
 import com.licaigc.PermissionUtils;
 import com.licaigc.library.R;
@@ -72,8 +73,7 @@ public class UpdateUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        updateInterface.checkUpdate(pkgName, packageInfo.versionName, packageInfo.versionCode, ManifestUtils.getMeta("UMENG_CHANNEL"))
-        updateInterface.checkUpdate("com.talicai.timiclient", "2.3.4", 1, "anzhuoshichang")
+        updateInterface.checkUpdate(pkgName, packageInfo.versionName, packageInfo.versionCode, ManifestUtils.getMeta("UMENG_CHANNEL"))
                 .subscribeOn(Schedulers.io())
                 .concatMap(new Func1<Response<ResponseCheckUpdate>, Observable<ResponseCheckUpdate>>() {
                     @Override
