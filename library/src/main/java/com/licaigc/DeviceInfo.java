@@ -90,10 +90,6 @@ public class DeviceInfo {
     }
 
     public static String getAndroidId() {
-        if (!PermissionUtils.hasPermission("android.permission.READ_PHONE_STATE")) {
-            return null;
-        }
-
         return Settings.Secure.getString(AndroidBaseLibrary.getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 }
