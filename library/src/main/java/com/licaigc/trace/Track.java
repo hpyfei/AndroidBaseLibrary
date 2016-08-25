@@ -30,6 +30,7 @@ public class Track {
     // Function
     public static void onActivate() {
         Map<String, String> params = getBasicInfo();
+        params.put("action", String.valueOf(TraceAction.ACTIVATE.ordinal()));
         request(params);
     }
 
