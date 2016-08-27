@@ -72,6 +72,9 @@ dependencies {
 
     compile 'com.github.campusappcn.AndRouter:router:1.2.5'
     apt 'com.github.campusappcn.AndRouter:compiler:1.2.5'
+
+    compile 'org.parceler:parceler-api:1.1.5'
+    apt 'org.parceler:parceler:1.1.5'
 }
 
 
