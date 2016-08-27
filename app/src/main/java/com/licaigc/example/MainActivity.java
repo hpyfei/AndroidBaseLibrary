@@ -22,7 +22,7 @@ public class MainActivity extends Activity {
         mBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UpdateUtils.checkUpdate(MainActivity.this, "123", new UpdateUtils.OnCheckUpdate() {
+                UpdateUtils.checkUpdate(MainActivity.this, new UpdateUtils.OnCheckUpdate() {
                     @Override
                     public void onFinish(int result) {
                         Log.e(TAG, String.valueOf(result));
