@@ -2,11 +2,12 @@ package com.licaigc.example;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.licaigc.AndroidBaseLibrary;
-import com.licaigc.trace.Track;
+import com.licaigc.update.UpdateUtils;
 
 public class MainActivity extends Activity {
     public static final String TAG = "MainActivity";
@@ -21,13 +22,18 @@ public class MainActivity extends Activity {
         mBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Track.onLogout("1234");
-//                UpdateUtils.checkUpdate(MainActivity.this, "123", new UpdateUtils.OnCheckUpdate() {
-//                    @Override
-//                    public void onFinish(boolean okOrCancel) {
-//                        Toast.makeText(MainActivity.this, String.valueOf(okOrCancel), Toast.LENGTH_SHORT).show();
-//                    }
-//                });
+                UpdateUtils.checkUpdate(MainActivity.this, "123", new UpdateUtils.OnCheckUpdate() {
+                    @Override
+                    public void onFinish(int result) {
+                        Log.e(TAG, String.valueOf(result));
+                    }
+
+                    @Override
+                    public boolean onUpdate(String oldVersionName, String newVersionName) {
+                        Log.e(TAG, oldVersionName + ":" + newVersionName);
+                        return true;
+                    }
+                });
             }
         });
 

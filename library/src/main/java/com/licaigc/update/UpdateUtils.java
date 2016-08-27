@@ -51,7 +51,25 @@ public class UpdateUtils {
     }
 
     public interface OnCheckUpdate {
-        void onFinish(boolean okOrCancel);
+        int NO_UPDATE = 1;
+        int CANCEL = 10;
+        int USER_OK = 100;
+        int USER_CANCEL = 101;
+        int ERROR = 1000;
+
+        /**
+         * 服务器正常返回时会被调用
+         * @param oldVersionName
+         * @param newVersionName
+         * @return `true` 则继续后续弹窗流程, `false` 则终止
+         */
+        boolean onUpdate(String oldVersionName, String newVersionName);
+
+        /**
+         * 总会被调用
+         * @param result
+         */
+        void onFinish(int result);
     }
 
     /**
@@ -62,18 +80,27 @@ public class UpdateUtils {
      */
     public static void checkUpdate(final Context context, String pkgName, final OnCheckUpdate onCheckUpdate) {
         if (!PermissionUtils.hasPermission("android.permission.WRITE_EXTERNAL_STORAGE")) {
+            if (onCheckUpdate != null) {
+                onCheckUpdate.onFinish(OnCheckUpdate.ERROR);
+            }
             return;
         }
 
         IUpdate updateInterface = getUpdateInterface();
         final Context appContext = AndroidBaseLibrary.getContext();
-        PackageInfo packageInfo = null;
+        final PackageInfo packageInfo;
         try {
             packageInfo = appContext.getPackageManager().getPackageInfo(appContext.getPackageName(), 0);
         } catch (Exception e) {
             e.printStackTrace();
+
+            if (onCheckUpdate != null) {
+                onCheckUpdate.onFinish(OnCheckUpdate.ERROR);
+            }
+            return;
         }
         updateInterface.checkUpdate(pkgName, packageInfo.versionName, packageInfo.versionCode, ManifestUtils.getMeta("UMENG_CHANNEL"))
+//        updateInterface.checkUpdate("com.talicai.timiclient", "2.3.4", 1, "anzhuoshichang")
                 .subscribeOn(Schedulers.io())
                 .concatMap(new Func1<Response<ResponseCheckUpdate>, Observable<ResponseCheckUpdate>>() {
                     @Override
@@ -81,32 +108,56 @@ public class UpdateUtils {
                         // 返回值详情: http://www.tuluu.com/platform/ymir/wikis/home
                         if (response.code() == 200) {
                             // 没更新
+                            if (onCheckUpdate != null) {
+                                onCheckUpdate.onFinish(OnCheckUpdate.NO_UPDATE);
+                            }
+                            return Observable.empty();
                         } else if (response.code() == 222) {
                             // 有更新
                             final ResponseCheckUpdate responseCheckUpdate = response.body();
-                            return NetworkUtils.get(responseCheckUpdate.data.image)
-                                    .map(new Func1<byte[], ResponseCheckUpdate>() {
-                                        @Override
-                                        public ResponseCheckUpdate call(byte[] bytes) {
-                                            try {
-                                                responseCheckUpdate.data.pic = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
+
+                            boolean conti = true;
+                            if (onCheckUpdate != null) {
+                                conti = onCheckUpdate.onUpdate(packageInfo.versionName, responseCheckUpdate.data.version);
+                            }
+                            if (conti) {
+                                return NetworkUtils.get(responseCheckUpdate.data.image)
+                                        .map(new Func1<byte[], ResponseCheckUpdate>() {
+                                            @Override
+                                            public ResponseCheckUpdate call(byte[] bytes) {
+                                                try {
+                                                    responseCheckUpdate.data.pic = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                                return responseCheckUpdate;
                                             }
-                                            return responseCheckUpdate;
-                                        }
-                                    });
+                                        });
+                            } else {
+                                if (onCheckUpdate != null) {
+                                    onCheckUpdate.onFinish(OnCheckUpdate.CANCEL);
+                                }
+                                return Observable.empty();
+                            }
                         } else if (response.code() == 400) {
-                            throw new RuntimeException(response.body().message);
+                            // 客户端错误
+                            if (onCheckUpdate != null) {
+                                onCheckUpdate.onFinish(OnCheckUpdate.ERROR);
+                            }
+                            return Observable.error(new RuntimeException(response.body().message));
                         } else if (response.code() == 500){
                             // 服务器内部错误
-                            throw new RuntimeException("服务器正在维护, 请稍后再试...");
+                            if (onCheckUpdate != null) {
+                                onCheckUpdate.onFinish(OnCheckUpdate.ERROR);
+                            }
+                            return Observable.error(new RuntimeException("服务器正在维护, 请稍后再试..."));
                         } else {
                             // 不支持的 status code 或者
-                            throw new RuntimeException(String.format("不支持的 status code (%d)", response.code()));
+                            if (onCheckUpdate != null) {
+                                onCheckUpdate.onFinish(OnCheckUpdate.ERROR);
+                            }
+                            return Observable.error(new RuntimeException(String.format("不支持的 status code (%d)", response.code())));
                         }
-
-                        return Observable.empty();
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -149,7 +200,7 @@ public class UpdateUtils {
                                 dialog.dismiss();
 
                                 if (onCheckUpdate != null) {
-                                    onCheckUpdate.onFinish(true);
+                                    onCheckUpdate.onFinish(OnCheckUpdate.USER_OK);
                                 }
                             }
                         });
@@ -159,7 +210,7 @@ public class UpdateUtils {
                                 dialog.cancel();
 
                                 if (onCheckUpdate != null) {
-                                    onCheckUpdate.onFinish(false);
+                                    onCheckUpdate.onFinish(OnCheckUpdate.USER_CANCEL);
                                 }
                             }
                         });
