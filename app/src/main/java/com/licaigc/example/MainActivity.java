@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.licaigc.AndroidBaseLibrary;
 import com.licaigc.update.UpdateUtils;
@@ -24,14 +25,16 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 UpdateUtils.checkUpdate(MainActivity.this, new UpdateUtils.OnCheckUpdate() {
                     @Override
-                    public void onFinish(int result) {
-                        Log.e(TAG, String.valueOf(result));
+                    public boolean onUpdate(String oldVersionName, String newVersionName) {
+                        Log.e(TAG, oldVersionName + ":" + newVersionName);
+                        Toast.makeText(MainActivity.this, "onUpdate", Toast.LENGTH_SHORT).show();
+                        return true;
                     }
 
                     @Override
-                    public boolean onUpdate(String oldVersionName, String newVersionName) {
-                        Log.e(TAG, oldVersionName + ":" + newVersionName);
-                        return true;
+                    public void onFinish(int result) {
+                        Log.e(TAG, String.valueOf(result));
+                        Toast.makeText(MainActivity.this, "onFinish", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

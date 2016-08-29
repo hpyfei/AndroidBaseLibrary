@@ -304,11 +304,10 @@ public class NetworkUtils {
             public void onReceive(Context context, Intent intent) {
                 Cursor cursor = downloadManager.query(new DownloadManager.Query().setFilterById(id));
                 if (cursor.moveToFirst()) {
-                    Uri localUri = Uri.parse(cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)));
                     switch (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))) {
                         case DownloadManager.STATUS_SUCCESSFUL:
                             if (onDownloadBySystem != null) {
-                                onDownloadBySystem.onFinish(true, new File(localUri.getPath()));
+                                onDownloadBySystem.onFinish(true, new File(cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI))));
                             }
                             break;
                         case DownloadManager.STATUS_FAILED:
