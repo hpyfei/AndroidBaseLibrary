@@ -5,11 +5,11 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "com.licaigc.androidbaselibrary"
+        applicationId "com.jijindou.android.fund"
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 1023
-        versionName "2.3.3"
+        versionName "2.2.0"
     }
     buildTypes {
         release {

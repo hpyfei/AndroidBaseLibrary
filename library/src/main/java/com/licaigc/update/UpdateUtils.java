@@ -203,7 +203,11 @@ public class UpdateUtils {
                         Button okBtn = ViewUtils.findViewById(dialog, R.id.btn_ok);
                         Button cancelBtn = ViewUtils.findViewById(dialog, R.id.btn_cancel);
 
-                        if (responseCheckUpdate.data.pic == null) {
+                        titleTv.setText(responseCheckUpdate.data.title);
+                        descTv.setText(responseCheckUpdate.data.desc);
+                        if (responseCheckUpdate.data.pic != null) {
+                            picIv.setImageBitmap(responseCheckUpdate.data.pic);
+                        } else {
                             // 下载图片失败, 则隐藏图片改用短样式
                             picIv.setVisibility(View.GONE);
                         }

@@ -22,7 +22,7 @@
 
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="baidushoujizhushou"></meta-data>
+            android:value="android"></meta-data>
 
     </application>
 
