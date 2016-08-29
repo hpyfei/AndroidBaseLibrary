@@ -53,14 +53,30 @@ public class UpdateUtils {
     }
 
     public interface OnCheckUpdate {
+        /**
+         * 无更新
+         */
         int NO_UPDATE = 1;
+        /**
+         * `onUpdate` 返回了 `false` (即 客户端取消)
+         */
         int CANCEL = 10;
+        /**
+         * 用户点击了 '立即升级'
+         */
         int USER_OK = 100;
+        /**
+         * 用户点击了 '取消'
+         */
         int USER_CANCEL = 101;
+        /**
+         * 内部错误
+         */
         int ERROR = 1000;
 
         /**
-         * 服务器正常返回时会被调用
+         * 服务器正常返回时会被调用, 主线程被调用
+         *
          * @param oldVersionName
          * @param newVersionName
          * @return `true` 则继续后续弹窗流程, `false` 则终止
@@ -68,7 +84,8 @@ public class UpdateUtils {
         boolean onUpdate(String oldVersionName, String newVersionName);
 
         /**
-         * 总会被调用
+         * 总会被调用, 主线程被调用
+         *
          * @param result
          */
         void onFinish(int result);
