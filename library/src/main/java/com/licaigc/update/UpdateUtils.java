@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.licaigc.AndroidBaseLibrary;
+import com.licaigc.ManifestUtils;
 import com.licaigc.PackageUtils;
 import com.licaigc.PermissionUtils;
 import com.licaigc.library.R;
@@ -126,8 +127,8 @@ public class UpdateUtils {
             }
             return;
         }
-//        updateInterface.checkUpdate(AndroidBaseLibrary.getContext().getPackageName(), packageInfo.versionName, 1, ManifestUtils.getMeta("UMENG_CHANNEL"))
-        updateInterface.checkUpdate("com.talicai.timiclient", "2.3.1", 1, "anzhuoshichang")
+        updateInterface.checkUpdate(AndroidBaseLibrary.getContext().getPackageName(), packageInfo.versionName, 1, ManifestUtils.getMeta("UMENG_CHANNEL"))
+//        updateInterface.checkUpdate("com.talicai.timiclient", "2.3.1", 1, "anzhuoshichang")
                 .subscribeOn(Schedulers.io())
                 .concatMap(new Func1<Response<ResponseCheckUpdate>, Observable<ResponseCheckUpdate>>() {
                     @Override
