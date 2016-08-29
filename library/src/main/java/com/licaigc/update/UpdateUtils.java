@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
@@ -13,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.licaigc.AndroidBaseLibrary;
-import com.licaigc.ManifestUtils;
 import com.licaigc.PackageUtils;
 import com.licaigc.PermissionUtils;
 import com.licaigc.library.R;
@@ -51,14 +52,30 @@ public class UpdateUtils {
     }
 
     public interface OnCheckUpdate {
+        /**
+         * 无更新
+         */
         int NO_UPDATE = 1;
+        /**
+         * `onUpdate` 返回了 `false` (即 客户端取消)
+         */
         int CANCEL = 10;
+        /**
+         * 用户点击了 '立即升级'
+         */
         int USER_OK = 100;
+        /**
+         * 用户点击了 '取消'
+         */
         int USER_CANCEL = 101;
+        /**
+         * 内部错误
+         */
         int ERROR = 1000;
 
         /**
-         * 服务器正常返回时会被调用
+         * 服务器正常返回时会被调用, 主线程被调用
+         *
          * @param oldVersionName
          * @param newVersionName
          * @return `true` 则继续后续弹窗流程, `false` 则终止
@@ -66,7 +83,8 @@ public class UpdateUtils {
         boolean onUpdate(String oldVersionName, String newVersionName);
 
         /**
-         * 总会被调用
+         * 总会被调用, 主线程被调用
+         *
          * @param result
          */
         void onFinish(int result);
@@ -80,7 +98,12 @@ public class UpdateUtils {
     public static void checkUpdate(final Context context, final OnCheckUpdate onCheckUpdate) {
         if (!PermissionUtils.hasPermission("android.permission.WRITE_EXTERNAL_STORAGE")) {
             if (onCheckUpdate != null) {
-                onCheckUpdate.onFinish(OnCheckUpdate.ERROR);
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        onCheckUpdate.onFinish(OnCheckUpdate.ERROR);
+                    }
+                });
             }
             return;
         }
@@ -94,12 +117,17 @@ public class UpdateUtils {
             e.printStackTrace();
 
             if (onCheckUpdate != null) {
-                onCheckUpdate.onFinish(OnCheckUpdate.ERROR);
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        onCheckUpdate.onFinish(OnCheckUpdate.ERROR);
+                    }
+                });
             }
             return;
         }
-        updateInterface.checkUpdate(AndroidBaseLibrary.getContext().getPackageName(), packageInfo.versionName, 1, ManifestUtils.getMeta("UMENG_CHANNEL"))
-//        updateInterface.checkUpdate("com.talicai.timiclient", "2.3.4", 1, "anzhuoshichang")
+//        updateInterface.checkUpdate(AndroidBaseLibrary.getContext().getPackageName(), packageInfo.versionName, 1, ManifestUtils.getMeta("UMENG_CHANNEL"))
+        updateInterface.checkUpdate("com.talicai.timiclient", "2.3.1", 1, "anzhuoshichang")
                 .subscribeOn(Schedulers.io())
                 .concatMap(new Func1<Response<ResponseCheckUpdate>, Observable<ResponseCheckUpdate>>() {
                     @Override
@@ -108,54 +136,67 @@ public class UpdateUtils {
                         if (response.code() == 200) {
                             // 没更新
                             if (onCheckUpdate != null) {
-                                onCheckUpdate.onFinish(OnCheckUpdate.NO_UPDATE);
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        onCheckUpdate.onFinish(OnCheckUpdate.NO_UPDATE);
+                                    }
+                                });
                             }
                             return Observable.empty();
                         } else if (response.code() == 222) {
                             // 有更新
-                            final ResponseCheckUpdate responseCheckUpdate = response.body();
-
-                            boolean conti = true;
-                            if (onCheckUpdate != null) {
-                                conti = onCheckUpdate.onUpdate(packageInfo.versionName, responseCheckUpdate.data.version);
-                            }
-                            if (conti) {
-                                return NetworkUtils.get(responseCheckUpdate.data.image)
-                                        .map(new Func1<byte[], ResponseCheckUpdate>() {
-                                            @Override
-                                            public ResponseCheckUpdate call(byte[] bytes) {
-                                                try {
-                                                    responseCheckUpdate.data.pic = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
-                                                }
-                                                return responseCheckUpdate;
+                            return Observable.just(response.body())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .map(new Func1<ResponseCheckUpdate, ResponseCheckUpdate>() {
+                                        @Override
+                                        public ResponseCheckUpdate call(ResponseCheckUpdate responseCheckUpdate) {
+                                            if (onCheckUpdate != null) {
+                                                responseCheckUpdate.conti = onCheckUpdate.onUpdate(packageInfo.versionName, responseCheckUpdate.data.version);
                                             }
-                                        });
-                            } else {
-                                if (onCheckUpdate != null) {
-                                    onCheckUpdate.onFinish(OnCheckUpdate.CANCEL);
-                                }
-                                return Observable.empty();
-                            }
+                                            return responseCheckUpdate;
+                                        }
+                                    });
                         } else if (response.code() == 400) {
                             // 客户端错误
-                            if (onCheckUpdate != null) {
-                                onCheckUpdate.onFinish(OnCheckUpdate.ERROR);
-                            }
                             return Observable.error(new RuntimeException(response.body().message));
-                        } else if (response.code() == 500){
+                        } else if (response.code() == 500) {
                             // 服务器内部错误
-                            if (onCheckUpdate != null) {
-                                onCheckUpdate.onFinish(OnCheckUpdate.ERROR);
-                            }
                             return Observable.error(new RuntimeException("服务器正在维护, 请稍后再试..."));
                         } else {
                             // 不支持的 status code 或者
-                            if (onCheckUpdate != null) {
-                                onCheckUpdate.onFinish(OnCheckUpdate.ERROR);
-                            }
                             return Observable.error(new RuntimeException(String.format("不支持的 status code (%d)", response.code())));
+                        }
+                    }
+                })
+                .observeOn(Schedulers.io())
+                .concatMap(new Func1<ResponseCheckUpdate, Observable<ResponseCheckUpdate>>() {
+                    @Override
+                    public Observable<ResponseCheckUpdate> call(final ResponseCheckUpdate responseCheckUpdate) {
+                        if (responseCheckUpdate.conti) {
+                            return NetworkUtils.get(responseCheckUpdate.data.image)
+                                    .observeOn(Schedulers.io())
+                                    .map(new Func1<byte[], ResponseCheckUpdate>() {
+                                        @Override
+                                        public ResponseCheckUpdate call(byte[] bytes) {
+                                            try {
+                                                responseCheckUpdate.data.pic = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                            return responseCheckUpdate;
+                                        }
+                                    });
+                        } else {
+                            if (onCheckUpdate != null) {
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        onCheckUpdate.onFinish(OnCheckUpdate.CANCEL);
+                                    }
+                                });
+                            }
+                            return Observable.empty();
                         }
                     }
                 })
@@ -217,7 +258,16 @@ public class UpdateUtils {
                         return null;
                     }
                 })
-                .subscribe(new SimpleEasySubscriber<Void>());
+                .subscribe(new SimpleEasySubscriber<Void>() {
+                    @Override
+                    public void onFail(String reason) {
+                        super.onFail(reason);
+
+                        if (onCheckUpdate != null) {
+                            onCheckUpdate.onFinish(OnCheckUpdate.ERROR);
+                        }
+                    }
+                });
     }
 
     //

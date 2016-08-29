@@ -23,4 +23,7 @@ public class ResponseCheckUpdate {
         // internal
         public transient Bitmap pic;
     }
+
+    // internal
+    public transient boolean conti = true;// `onUpdate` 后客户端是否选择继续
 }
