@@ -7,7 +7,6 @@ import android.content.pm.PackageInfo;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -211,11 +210,7 @@ public class UpdateUtils {
                             // 下载图片失败, 则隐藏图片改用短样式
                             picIv.setVisibility(View.GONE);
                         }
-                        TypedValue typedValue = new TypedValue();
-                        if (context.getTheme().resolveAttribute(android.R.attr.colorPrimary, typedValue, true)) {
-                            int primaryColor = typedValue.data;
-                            okBtn.setBackgroundColor(primaryColor);
-                        }
+                        okBtn.setBackgroundColor(AndroidBaseLibrary.getPrimaryColor());
                         if (responseCheckUpdate.data.force) {
                             cancelBtn.setVisibility(View.GONE);
                             dialog.setCancelable(false);

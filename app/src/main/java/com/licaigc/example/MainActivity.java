@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.licaigc.AndroidBaseLibrary;
+import com.licaigc.trace.Track;
 import com.licaigc.update.UpdateUtils;
 
 public class MainActivity extends Activity {
@@ -41,6 +42,8 @@ public class MainActivity extends Activity {
         });
 
         AndroidBaseLibrary.initialize(getApplicationContext());
+
+        Track.onActivate();
 
         mBtn.post(new Runnable() {
             @Override

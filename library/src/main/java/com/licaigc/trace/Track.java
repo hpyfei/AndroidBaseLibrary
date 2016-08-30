@@ -2,6 +2,7 @@ package com.licaigc.trace;
 
 import android.os.Build;
 
+import com.licaigc.AndroidBaseLibrary;
 import com.licaigc.Constants;
 import com.licaigc.DeviceInfo;
 import com.licaigc.ManifestUtils;
@@ -114,7 +115,7 @@ public class Track {
                 "buildcode",    String.valueOf(PackageUtils.getVersionCode()),
                 "channel",      ManifestUtils.getMeta("UMENG_CHANNEL"),
                 "ip",           DeviceInfo.getIpAddress(),
-                "site",         String.valueOf(Constants.APP_ID),
+                "site",         String.valueOf(AndroidBaseLibrary.getAppId()),
                 "lbs",          "",
                 "network",      NetworkUtils.isWifiConnected() ? "0" :
                                     NetworkUtils.isMobileConnected() ? "4":
