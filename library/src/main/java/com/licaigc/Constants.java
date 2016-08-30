@@ -12,9 +12,9 @@ public class Constants {
     public static final int OS_IOS     = 2;
 
     // Package Name
-    public static final String PKG_TALICAI = "com.talicai.talicaiclient";
-    public static final String PKG_GUIHUA = "com.haoguihua.app";
-    public static final String PKG_TIMI = "com.talicai.timiclient";
+    public static final String PKG_TALICAI  = "com.talicai.talicaiclient";
+    public static final String PKG_GUIHUA   = "com.haoguihua.app";
+    public static final String PKG_TIMI     = "com.talicai.timiclient";
     public static final String PKG_JIJINDOU = "com.jijindou.android.fund";
 
     // 应用 Id
