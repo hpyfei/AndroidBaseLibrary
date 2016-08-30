@@ -307,7 +307,7 @@ public class NetworkUtils {
                     switch (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))) {
                         case DownloadManager.STATUS_SUCCESSFUL:
                             if (onDownloadBySystem != null) {
-                                onDownloadBySystem.onFinish(true, new File(cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI))));
+                                onDownloadBySystem.onFinish(true, new File(Uri.parse(cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI))).getPath()));
                             }
                             break;
                         case DownloadManager.STATUS_FAILED:
