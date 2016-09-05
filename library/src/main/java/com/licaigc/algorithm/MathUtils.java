@@ -28,4 +28,23 @@ public class MathUtils {
 
         return minValue;
     }
+
+    /**
+     * Make return value in [min, max]
+     * @param min
+     * @param t
+     * @param max
+     * @param <T>
+     * @return
+     */
+    public static <T extends Comparable<T>> T between(T min, T t, T max) {
+        if (t.compareTo(min) < 0) {
+            return min;
+        }
+        if (t.compareTo(max) > 0) {
+            return max;
+        }
+
+        return t;
+    }
 }
