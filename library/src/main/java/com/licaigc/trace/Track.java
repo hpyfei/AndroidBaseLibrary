@@ -30,8 +30,12 @@ public class Track {
 
     // Function
     public static void onActivate() {
+        onActivate(null);
+    }
+    public static void onActivate(String refer) {
         Map<String, String> params = getBasicInfo();
         params.put("action", String.valueOf(TraceAction.ACTIVATE.ordinal()));
+        params.put("refer", refer);
         request(params);
     }
 
