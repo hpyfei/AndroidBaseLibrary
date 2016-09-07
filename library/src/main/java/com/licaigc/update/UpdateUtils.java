@@ -44,7 +44,7 @@ public class UpdateUtils {
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
         Retrofit retrofit = new Retrofit.Builder()
                 .client(okHttpClient)
-                .baseUrl(String.format("%s/v%s/", "http://v.lcgc.pub", 1))
+                .baseUrl("http://v.licaigc.net/v1/")
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
