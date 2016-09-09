@@ -159,6 +159,10 @@ public class ChainCalendar {
         return new ChainCalendar(calendar);
     }
 
+    public static ChainCalendar getInstance(Calendar calendar) {
+        return new ChainCalendar((Calendar) calendar.clone());
+    }
+
     public String getDisplayName(int field, int style, Locale locale) {
         return mCalendar.getDisplayName(field, style, locale);
     }
