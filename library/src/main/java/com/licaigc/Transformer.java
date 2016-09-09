@@ -248,6 +248,17 @@ public class Transformer {
         return m;
     }
 
+    public interface One2One<F, T> {
+        T transform(F f);
+    }
+    public static <F, T> List<T> foreach(List<F> l, One2One<F, T> transformer) {
+        List<T> rtn = new ArrayList<>();
+        for (F f : l) {
+            rtn.add(transformer.transform(f));
+        }
+        return rtn;
+    }
+
     // Time
     public static String timeInMillis2String(long millis) {
         return timeInMillis2String(millis, false);
