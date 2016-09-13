@@ -26,7 +26,7 @@ import rx.schedulers.Schedulers;
 public class Track {
     public static final String TAG = "Track";
 
-    private static final String URL = "http://c.licaigc.net/v1/app";
+    private static final String URL = "http://c.guihua.com/v1/app";
 
     // Function
     public static void onActivate() {
