@@ -1,6 +1,6 @@
 def MAJOR_VERSION = 0
 def MINOR_VERSION = 9
-def PATCH_VERSION = 3
+def PATCH_VERSION = 4
 
 def VERSION_CODE = MAJOR_VERSION * 100 + MINOR_VERSION * 10 + PATCH_VERSION
 def VERSION_NAME = MAJOR_VERSION + '.' + MINOR_VERSION + '.' + PATCH_VERSION
@@ -13,7 +13,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.3'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
 //        classpath "io.realm:realm-gradle-plugin:1.1.1"
