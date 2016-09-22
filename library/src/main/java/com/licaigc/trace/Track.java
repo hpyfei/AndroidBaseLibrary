@@ -1,6 +1,7 @@
 package com.licaigc.trace;
 
 import android.os.Build;
+import android.text.TextUtils;
 
 import com.licaigc.AndroidBaseLibrary;
 import com.licaigc.Constants;
@@ -8,6 +9,7 @@ import com.licaigc.DeviceInfo;
 import com.licaigc.ManifestUtils;
 import com.licaigc.PackageUtils;
 import com.licaigc.Transformer;
+import com.licaigc.algorithm.hash.HashUtils;
 import com.licaigc.network.NetworkUtils;
 import com.licaigc.rxjava.SimpleEasySubscriber;
 
@@ -27,6 +29,7 @@ public class Track {
     public static final String TAG = "Track";
 
     private static final String URL = "http://c.guihua.com/v1/app";
+//    private static final String URL = "http://192.168.8.21:33000/v1/app";
 
     // Function
     public static void onActivate() {
@@ -36,6 +39,13 @@ public class Track {
         Map<String, String> params = getBasicInfo();
         params.put("action", String.valueOf(TraceAction.ACTIVATE.ordinal()));
         params.put("refer", refer);
+
+        String androidId = DeviceInfo.getAndroidId();
+        String imei = DeviceInfo.getImei();
+        String macAddr = DeviceInfo.getMacAddress();
+        String pushId = HashUtils.md5(String.format("%s/%s/%s", TextUtils.isEmpty(androidId) ? "" : androidId, TextUtils.isEmpty(imei) ? "" : imei, androidId, TextUtils.isEmpty(macAddr) ? "" : macAddr));
+        params.put("ref_id", pushId);
+
         request(params);
     }
 
