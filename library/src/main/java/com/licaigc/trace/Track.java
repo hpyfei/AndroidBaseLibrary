@@ -39,12 +39,7 @@ public class Track {
         Map<String, String> params = getBasicInfo();
         params.put("action", String.valueOf(TraceAction.ACTIVATE.ordinal()));
         params.put("refer", refer);
-
-        String androidId = DeviceInfo.getAndroidId();
-        String imei = DeviceInfo.getImei();
-        String macAddr = DeviceInfo.getMacAddress();
-        String pushId = HashUtils.md5(String.format("%s/%s/%s", TextUtils.isEmpty(androidId) ? "" : androidId, TextUtils.isEmpty(imei) ? "" : imei, androidId, TextUtils.isEmpty(macAddr) ? "" : macAddr));
-        params.put("ref_id", pushId);
+        params.put("ref_id", getRefId());
 
         request(params);
     }
@@ -162,5 +157,17 @@ public class Track {
                     }
                 })
                 .subscribe(new SimpleEasySubscriber<Void>());
+    }
+
+    //
+    /**
+     * 设备硬件摘要, 用于识别一台设备
+     * @return
+     */
+    public static String getRefId() {
+        String androidId = DeviceInfo.getAndroidId();
+        String imei = DeviceInfo.getImei();
+        String macAddr = DeviceInfo.getMacAddress();
+        return HashUtils.md5(String.format("%s/%s/%s", TextUtils.isEmpty(androidId) ? "" : androidId, TextUtils.isEmpty(imei) ? "" : imei, androidId, TextUtils.isEmpty(macAddr) ? "" : macAddr));
     }
 }
