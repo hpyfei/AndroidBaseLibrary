@@ -70,6 +70,11 @@ dependencies {
 
 具体使用, 请见 [wiki](https://github.com/wealthworks/AndroidBaseLibrary/wiki).
 
+# Trouble Shooting
+1. 编译错误: _> NDK integration is deprecated in the current plugin.._
+
+  A: 在 **app/gradle.properties**(如果没有则创建) 中增加 `android.useDeprecatedNdk=true`
+
 # Branch Management
 master: 作为主要开发分支.
 
