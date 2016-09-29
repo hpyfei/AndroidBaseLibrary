@@ -16,13 +16,18 @@ import cn.jpush.android.api.TagAliasCallback;
 /**
  * Created by walfud on 2016/7/7.
  */
-public class AndroidBaseLibrary implements Handler.Callback {
+public class AndroidBaseLibrary {
     public static final String TAG = "AndroidBaseLibrary";
 
     /**
      * Should be application context
      */
     private static Context sContext;
+
+    /**
+     * 极光推送初始化
+     */
+    private static final int MSG_JPUSH_ALIAS = 0x1000;
 
     private static Handler sHandler;
 
@@ -43,7 +48,24 @@ public class AndroidBaseLibrary implements Handler.Callback {
      */
     public static final boolean initialize(Context context) {
         sContext = context.getApplicationContext();
-        sHandler = new Handler();
+        sHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case MSG_JPUSH_ALIAS: {
+                        String alias = Track.getRefId();
+                        String tagStr = PackageUtils.getVersionName().replace(".", "_");
+                        Set<String> tag = new HashSet<>();
+                        tag.add(tagStr);
+                        JPushInterface.setAliasAndTags(sContext, alias, tag, sAliasCallback);
+                        break;
+                    }
+
+                    default:
+                        break;
+                }
+            }
+        };
 
         String pkgName = AndroidBaseLibrary.getContext().getPackageName();
         if (false) {
@@ -111,24 +133,4 @@ public class AndroidBaseLibrary implements Handler.Callback {
             }
         }
     };
-
-    private static final int MSG_JPUSH_ALIAS = 0x1000;
-
-    @Override
-    public boolean handleMessage(Message msg) {
-        switch (msg.what) {
-            case MSG_JPUSH_ALIAS: {
-                String alias = Track.getRefId();
-                String tagStr = PackageUtils.getVersionName().replace(".", "_");
-                Set<String> tag = new HashSet<>();
-                tag.add(tagStr);
-                JPushInterface.setAliasAndTags(sContext, alias, tag, sAliasCallback);
-                break;
-            }
-
-            default:
-                break;
-        }
-        return false;
-    }
 }

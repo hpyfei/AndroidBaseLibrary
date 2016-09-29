@@ -5,15 +5,15 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "com.talicai.timiclient"
+        applicationId "com.licaigc.androidbaselibrary"
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 26
         versionName "4.4.0"
 
         manifestPlaceholders = [
-                JPUSH_PKGNAME : "JPUSH_PKGNAME",
-                JPUSH_APPKEY : "JPUSH_APPKEY", //JPush上注册的包名对应的appkey.
+                JPUSH_PKGNAME : applicationId,
+                JPUSH_APPKEY : "4dd604e8f7132cc5f352246e", //JPush上注册的包名对应的appkey.
                 JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
         ]
     }
