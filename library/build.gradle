@@ -34,6 +34,19 @@ android {
         targetSdkVersion 23
         versionCode VERSION_CODE
         versionName VERSION_NAME
+        multiDexEnabled true
+
+        ndk {
+            //选择要添加的对应cpu类型的.so库。
+            abiFilters 'armeabi', 'x86'
+            // 还可以添加  'x86_64', 'mips', 'mips64'
+        }
+
+        manifestPlaceholders = [
+                JPUSH_PKGNAME : "JPUSH_PKGNAME",
+                JPUSH_APPKEY : "JPUSH_APPKEY", //JPush上注册的包名对应的appkey.
+                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
+        ]
     }
     buildTypes {
         release {
@@ -75,6 +88,8 @@ dependencies {
 
     compile 'org.parceler:parceler-api:1.1.5'
     apt 'org.parceler:parceler:1.1.5'
+
+    compile 'cn.jiguang:jpush:2.1.9'
 }
 
 

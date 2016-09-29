@@ -5,11 +5,17 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "com.jijindou.android.fund"
+        applicationId "com.talicai.timiclient"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 1023
-        versionName "2.2.0"
+        versionCode 26
+        versionName "4.4.0"
+
+        manifestPlaceholders = [
+                JPUSH_PKGNAME : "JPUSH_PKGNAME",
+                JPUSH_APPKEY : "JPUSH_APPKEY", //JPush上注册的包名对应的appkey.
+                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
+        ]
     }
     buildTypes {
         release {
