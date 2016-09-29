@@ -71,6 +71,19 @@ public class PackageUtils {
         AndroidBaseLibrary.getContext().startActivity(intent);
     }
 
+    public static boolean isTimiInstalled() {
+        return isPackageInstalled(Constants.PKG_TIMI);
+    }
+    public static boolean isTalicaiInstalled() {
+        return isPackageInstalled(Constants.PKG_TALICAI);
+    }
+    public static boolean isHaoguihuaInstalled() {
+        return isPackageInstalled(Constants.PKG_GUIHUA);
+    }
+    public static boolean isJijindouInstalled() {
+        return isPackageInstalled(Constants.PKG_JIJINDOU);
+    }
+
     //
     private interface IPackageInfoGetter<T> {
         T get(PackageInfo packageInfo);

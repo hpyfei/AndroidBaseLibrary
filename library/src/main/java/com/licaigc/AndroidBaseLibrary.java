@@ -3,6 +3,7 @@ package com.licaigc;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.licaigc.trace.Track;
@@ -54,9 +55,26 @@ public class AndroidBaseLibrary {
                 switch (msg.what) {
                     case MSG_JPUSH_ALIAS: {
                         String alias = Track.getRefId();
-                        String tagStr = PackageUtils.getVersionName().replace(".", "_");
                         Set<String> tag = new HashSet<>();
-                        tag.add(tagStr);
+                        tag.add(PackageUtils.getVersionName().replace(".", "_"));   // 版本号
+                        tag.add(ManifestUtils.getMeta("UMENG_CHANNEL"));            // 渠道
+                        String pkgName = AndroidBaseLibrary.getContext().getPackageName();
+                        if (Constants.PKG_TIMI.compareToIgnoreCase(pkgName) != 0
+                                && PackageUtils.isTimiInstalled()) {                // 安装 timi 的用户
+                            tag.add("Timi记账");
+                        }
+                        if (Constants.PKG_TALICAI.compareToIgnoreCase(pkgName) != 0
+                                && PackageUtils.isTalicaiInstalled()) {             // 安装 timi 的用户
+                            tag.add("她理财");
+                        }
+                        if (Constants.PKG_GUIHUA.compareToIgnoreCase(pkgName) != 0
+                                && PackageUtils.isHaoguihuaInstalled()) {           // 安装 timi 的用户
+                            tag.add("好规划");
+                        }
+                        if (Constants.PKG_JIJINDOU.compareToIgnoreCase(pkgName) != 0
+                                && PackageUtils.isJijindouInstalled()) {            // 安装 timi 的用户
+                            tag.add("基金豆");
+                        }
                         JPushInterface.setAliasAndTags(sContext, alias, tag, sAliasCallback);
                         break;
                     }
@@ -117,8 +135,21 @@ public class AndroidBaseLibrary {
             String logs ;
             switch (code) {
                 case 0:
-                    logs = "Set tag and alias success";
-                    Log.i("JPush", logs);
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.append("Set tag(");
+                    if (!TextUtils.isEmpty(alias)) {
+                        stringBuilder.append(alias);
+                    }
+                    stringBuilder.append(") and alias(");
+                    String[] tagsArr = Transformer.stringCollection2Strings(tags);
+                    if (tagsArr.length > 0) {
+                        stringBuilder.append(tagsArr[0]);
+                        for (int i = 1; i < tagsArr.length; i++) {
+                            stringBuilder.append("," + tagsArr[i]);
+                        }
+                    }
+                    stringBuilder.append(") success");
+                    Log.i("JPush", stringBuilder.toString());
                     // 建议这里往 SharePreference 里写一个成功设置的状态。成功设置一次后，以后不必再次设置了。
                     break;
                 case 6002:
