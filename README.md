@@ -33,6 +33,41 @@ public class TimiApplication extends Application {
 }
 ```
 
+app/**build.gradle**
+
+```java
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion ...
+    buildToolsVersion "..."
+
+    defaultConfig {
+        applicationId "..."
+        minSdkVersion ...
+        targetSdkVersion ...
+        versionCode ...
+        versionName "..."
+
+        manifestPlaceholders = [
+                JPUSH_PKGNAME : applicationId,          // 保持原样
+                JPUSH_APPKEY  : "这里填写 JPush 上注册的包名对应的appkey",
+                JPUSH_CHANNEL : "developer-default",    // 保持原样
+        ]
+    }
+    buildTypes {
+        release {
+            ...
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    ...
+}
+```
+
 具体使用, 请见 [wiki](https://github.com/wealthworks/AndroidBaseLibrary/wiki).
 
 # Branch Management
