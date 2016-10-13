@@ -18,6 +18,17 @@ public class MathUtils {
         return minValue;
     }
 
+    public static float min(float... values) {
+        float minValue = 0;
+        for (float f : values) {
+            if (f < minValue) {
+                minValue = f;
+            }
+        }
+
+        return minValue;
+    }
+
     public static double min(double... values) {
         double minValue = 0;
         for (double d : values) {
