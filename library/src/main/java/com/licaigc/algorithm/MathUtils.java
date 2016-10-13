@@ -7,10 +7,10 @@ public class MathUtils {
 
     public static final String TAG = "MathUtils";
 
-    public static int min(int... values) {
-        int minValue = 0;
-        for (int i : values) {
-            if (i < minValue) {
+    public static <T extends Comparable<T>> T min(T... values) {
+        T minValue = values[0];
+        for (T i : values) {
+            if (i.compareTo(minValue) < 0) {
                 minValue = i;
             }
         }
@@ -18,26 +18,15 @@ public class MathUtils {
         return minValue;
     }
 
-    public static float min(float... values) {
-        float minValue = 0;
-        for (float f : values) {
-            if (f < minValue) {
-                minValue = f;
+    public static <T extends Comparable<T>> T max(T... values) {
+        T maxValue = values[0];
+        for (T i : values) {
+            if (i.compareTo(maxValue) > 0) {
+                maxValue = i;
             }
         }
 
-        return minValue;
-    }
-
-    public static double min(double... values) {
-        double minValue = 0;
-        for (double d : values) {
-            if (d < minValue) {
-                minValue = d;
-            }
-        }
-
-        return minValue;
+        return maxValue;
     }
 
     /**
