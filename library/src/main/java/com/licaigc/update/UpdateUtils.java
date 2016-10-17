@@ -93,7 +93,8 @@ public class UpdateUtils {
     /**
      * 需要 'WRITE_EXTERNAL_STORAGE' 权限
      *
-     * @param context
+     * @param context Activity Context
+     * @param onCheckUpdate
      */
     public static void checkUpdate(final Context context, final OnCheckUpdate onCheckUpdate) {
         checkUpdate(context, ManifestUtils.getMeta("UMENG_CHANNEL"), onCheckUpdate);
