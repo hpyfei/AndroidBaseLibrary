@@ -96,6 +96,9 @@ public class UpdateUtils {
      * @param context
      */
     public static void checkUpdate(final Context context, final OnCheckUpdate onCheckUpdate) {
+        checkUpdate(context, ManifestUtils.getMeta("UMENG_CHANNEL"), onCheckUpdate);
+    }
+    public static void checkUpdate(final Context context, String channel, final OnCheckUpdate onCheckUpdate) {
         if (!PermissionUtils.hasPermission("android.permission.WRITE_EXTERNAL_STORAGE")) {
             if (onCheckUpdate != null) {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -126,7 +129,7 @@ public class UpdateUtils {
             }
             return;
         }
-        updateInterface.checkUpdate(AndroidBaseLibrary.getContext().getPackageName(), packageInfo.versionName, 1, ManifestUtils.getMeta("UMENG_CHANNEL"))
+        updateInterface.checkUpdate(AndroidBaseLibrary.getContext().getPackageName(), packageInfo.versionName, 1, channel)
 //        updateInterface.checkUpdate("com.talicai.timiclient", "2.3.4", 1, "anzhuoshichang")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
