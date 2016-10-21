@@ -13,8 +13,6 @@ import com.licaigc.algorithm.hash.HashUtils;
 import com.licaigc.network.NetworkUtils;
 import com.licaigc.rxjava.SimpleEasySubscriber;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Map;
 
 import rx.Observable;
@@ -141,18 +139,7 @@ public class Track {
                 .map(new Func1<Void, Void>() {
                     @Override
                     public Void call(Void aVoid) {
-                        HttpURLConnection urlConnection = null;
-                        try {
-                            urlConnection = (HttpURLConnection) new URL(String.format("%s?%s", URL, param)).openConnection();
-                            urlConnection.setRequestMethod("GET");
-                            urlConnection.getResponseCode();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } finally {
-                            if (urlConnection != null) {
-                                urlConnection.disconnect();
-                            }
-                        }
+                        NetworkUtils.get(String.format("%s?%s", URL, param));
                         return null;
                     }
                 })
