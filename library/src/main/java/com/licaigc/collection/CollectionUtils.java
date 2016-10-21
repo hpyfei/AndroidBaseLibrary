@@ -3,8 +3,12 @@ package com.licaigc.collection;
 import com.licaigc.ObjectUtils;
 import com.licaigc.algorithm.Comparator;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -102,5 +106,39 @@ public class CollectionUtils {
         }
 
         return null;
+    }
+
+    /**
+     * Only support `ArrayList / HashSet / LinkedList / ArrayDeque`
+     * @param t
+     * @param comparable return 0 if you want keep the element
+     * @param <T>
+     * @param <E>
+     * @return
+     */
+    public static <T extends Collection, E> T filter(T t, Comparable<E> comparable) {
+        T filtered;
+        if (false) {
+        } else if (t instanceof ArrayList) {
+            filtered = (T) new ArrayList<>();
+        } else if (t instanceof HashSet) {
+            filtered = (T) new HashSet<>();
+        } else if (t instanceof LinkedList) {
+            filtered = (T) new LinkedList<>();
+        } else if (t instanceof ArrayDeque) {
+            filtered = (T) new ArrayDeque<>();
+        } else {
+            return null;
+        }
+
+        Iterator<E> iterator = t.iterator();
+        while (iterator.hasNext()) {
+            E e = iterator.next();
+            if (comparable.compareTo(e) == 0) {
+                filtered.add(e);
+            }
+        }
+
+        return filtered;
     }
 }
