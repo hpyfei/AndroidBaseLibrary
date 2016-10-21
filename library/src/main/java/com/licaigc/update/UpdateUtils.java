@@ -1,6 +1,7 @@
 package com.licaigc.update;
 
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -94,11 +95,12 @@ public class UpdateUtils {
      * 需要 'WRITE_EXTERNAL_STORAGE' 权限
      *
      * @param context
+     * @param onCheckUpdate
      */
-    public static void checkUpdate(final Context context, final OnCheckUpdate onCheckUpdate) {
+    public static void checkUpdate(final Activity context, final OnCheckUpdate onCheckUpdate) {
         checkUpdate(context, ManifestUtils.getMeta("UMENG_CHANNEL"), onCheckUpdate);
     }
-    public static void checkUpdate(final Context context, String channel, final OnCheckUpdate onCheckUpdate) {
+    public static void checkUpdate(final Activity context, String channel, final OnCheckUpdate onCheckUpdate) {
         if (!PermissionUtils.hasPermission("android.permission.WRITE_EXTERNAL_STORAGE")) {
             if (onCheckUpdate != null) {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
