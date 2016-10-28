@@ -22,12 +22,15 @@ import com.licaigc.rxjava.SimpleEasySubscriber;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
@@ -49,8 +52,11 @@ public class NetworkUtils {
      * @see #getLarge(String, OnGetLarge)
      */
     public static Observable<byte[]> get(String url) {
+        return get(url, new HashMap<String, Object>());
+    }
+    public static Observable<byte[]> get(String url, Map<String, Object> param) {
         INetwork networkInterface = getNetworkInterface();
-        return networkInterface.get(url)
+        return networkInterface.get(url, param)
                 .subscribeOn(Schedulers.io())
                 .map(new Func1<Response<ResponseBody>, byte[]>() {
                     @Override
@@ -187,6 +193,31 @@ public class NetworkUtils {
                         }
                     }
                 });
+    }
+
+    public static Observable<byte[]> post(String url) {
+        return post(url, new HashMap<String, Object>());
+    }
+    public static Observable<byte[]> post(String url, Map<String, Object> param) {
+        INetwork networkInterface = getNetworkInterface();
+        return networkInterface.post(url, param)
+                .subscribeOn(Schedulers.io())
+                .map(new Func1<Response<ResponseBody>, byte[]>() {
+                    @Override
+                    public byte[] call(Response<ResponseBody> response) {
+                        byte[] bytes = null;
+                        if (response.isSuccessful()) {
+                            try {
+                                bytes = response.body().bytes();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        return bytes;
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     // Download File
@@ -404,8 +435,9 @@ public class NetworkUtils {
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
         Retrofit retrofit = new Retrofit.Builder()
                 .client(okHttpClient)
-                .baseUrl("http://empty")
+                .baseUrl("http://example.com")
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
         return retrofit.create(INetwork.class);
     }

@@ -15,15 +15,10 @@ import com.licaigc.debug.DebugInfo;
 import com.licaigc.debug.DebugUtils;
 import com.licaigc.network.NetworkUtils;
 import com.licaigc.rxjava.SimpleEasySubscriber;
-import com.scottyab.aescrypt.AESCrypt;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import rx.Observable;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * 统计, 打点相关
@@ -32,20 +27,19 @@ import rx.schedulers.Schedulers;
 public class Track {
     public static final String TAG = "Track";
 
-    private static final String URL = "http://c.guihua.com/v1/app";
-//    private static final String URL = "http://192.168.8.21:33000/v1/app";
+//    private static final String URL = "http://c.guihua.com/v1/app";
+    private static final String URL = "http://192.168.11.70:33000/v1/app";
 
     // Function
     public static void onActivate() {
         onActivate(null);
     }
     public static void onActivate(String refer) {
-        Map<String, String> params = getBasicInfo();
-        params.put("action", String.valueOf(TraceAction.ACTIVATE.ordinal()));
+        Map<String, Object> params = getBasicInfo();
+        params.put("action", TraceAction.ACTIVATE.ordinal());
         params.put("refer", refer);
         params.put("ref_id", getRefId());
         params.put("meta", getMeta());
-
         request(params);
     }
 
@@ -54,8 +48,8 @@ public class Track {
             return;
         }
 
-        Map<String, String> params = getBasicInfo();
-        params.put("action", String.valueOf(TraceAction.LOGIN.ordinal()));
+        Map<String, Object> params = getBasicInfo();
+        params.put("action", TraceAction.LOGIN.ordinal());
         params.put("role", userId);
         request(params);
     }
@@ -65,8 +59,8 @@ public class Track {
             return;
         }
 
-        Map<String, String> params = getBasicInfo();
-        params.put("action", String.valueOf(TraceAction.REGIST.ordinal()));
+        Map<String, Object> params = getBasicInfo();
+        params.put("action", TraceAction.REGIST.ordinal());
         params.put("role", userId);
         request(params);
     }
@@ -76,8 +70,8 @@ public class Track {
             return;
         }
 
-        Map<String, String> params = getBasicInfo();
-        params.put("action", String.valueOf(TraceAction.LOGOUT.ordinal()));
+        Map<String, Object> params = getBasicInfo();
+        params.put("action", TraceAction.LOGOUT.ordinal());
         params.put("role", userId);
         request(params);
     }
@@ -87,13 +81,13 @@ public class Track {
             return;
         }
 
-        Map<String, String> params = getBasicInfo();
-        params.put("action", String.valueOf(TraceAction.PURCHASE.ordinal()));
+        Map<String, Object> params = getBasicInfo();
+        params.put("action", TraceAction.PURCHASE.ordinal());
         params.put("role", userId);
         params.put("target", productId);
-        params.put("shares", String.valueOf(shares));
-        params.put("cost", String.valueOf(cost));
-        params.put("trade_status", isActionSuccess ? "1" : "0");
+        params.put("shares", shares);
+        params.put("cost", cost);
+        params.put("trade_status", isActionSuccess ? 1 : 0);
         request(params);
     }
 
@@ -102,24 +96,33 @@ public class Track {
             return;
         }
 
-        Map<String, String> params = getBasicInfo();
-        params.put("action", String.valueOf(TraceAction.REDEEM.ordinal()));
+        Map<String, Object> params = getBasicInfo();
+        params.put("action", TraceAction.REDEEM.ordinal());
         params.put("role", userId);
         params.put("target", productId);
-        params.put("shares", String.valueOf(shares));
-        params.put("cost", String.valueOf(cost));
-        params.put("trade_status", isActionSuccess ? "1" : "0");
+        params.put("shares", shares);
+        params.put("cost", cost);
+        params.put("trade_status", isActionSuccess ? 1 : 0);
         request(params);
     }
 
     // internal
+    private static void request(Map<String, Object> param) {
+        for (Map.Entry<String, Object> kv : param.entrySet()) {
+            if (kv.getValue() == null) {
+                kv.setValue("");
+            }
+        }
+
+        NetworkUtils.post(URL, param).subscribe(new SimpleEasySubscriber<byte[]>());
+    }
 
     /**
      * @return
      */
-    private static Map<String, String> getBasicInfo() {
+    private static Map<String, Object> getBasicInfo() {
         return Transformer.asMap(
-                "os",           String.valueOf(Constants.OS_ANDROID),
+                "os",           Constants.OS_ANDROID,
                 "osversion",    Build.VERSION.RELEASE,
                 "mac",          DeviceInfo.getMacAddress(),
                 "imei",         DeviceInfo.getImei(),
@@ -129,28 +132,14 @@ public class Track {
                 "buildcode",    String.valueOf(PackageUtils.getVersionCode()),
                 "channel",      ManifestUtils.getMeta("UMENG_CHANNEL"),
                 "ip",           DeviceInfo.getIpAddress(),
-                "site",         String.valueOf(AndroidBaseLibrary.getAppId()),
+                "site",         AndroidBaseLibrary.getAppId(),
                 "lbs",          "",
-                "network",      NetworkUtils.isWifiConnected() ? "0" :
-                                    NetworkUtils.isMobileConnected() ? "4":
-                                    "1",
+                "network",      NetworkUtils.isWifiConnected() ? 0 :
+                                    NetworkUtils.isMobileConnected() ? 4:
+                                    1,
                 "osname",       Build.BRAND,
-                "timestamp",    String.valueOf(System.currentTimeMillis())
+                "timestamp",    System.currentTimeMillis()
         );
-    }
-
-    private static void request(Map<String, String> params) {
-        final String param = Transformer.map2HttpGetParam(params, true, Transformer.MAP2HTTPGETPARAM_KEEP_ALL);
-        Observable.<Void>just(null)
-                .observeOn(Schedulers.io())
-                .map(new Func1<Void, Void>() {
-                    @Override
-                    public Void call(Void aVoid) {
-                        NetworkUtils.get(String.format("%s?%s", URL, param));
-                        return null;
-                    }
-                })
-                .subscribe(new SimpleEasySubscriber<Void>());
     }
 
     //
@@ -167,7 +156,7 @@ public class Track {
 
     //
     static class Meta {
-        public String site;
+        public int site;
         public String imei;
         public String androidid;
         public String mac;
@@ -177,14 +166,14 @@ public class Track {
             public String appname;
             public String pkg;
             public String version;
-            public String versioncode;
+            public int versioncode;
         }
     }
     private static String getMeta() {
         DebugInfo debugInfo = DebugUtils.dump();
 
         Meta meta = new Meta();
-        meta.site = String.valueOf(AndroidBaseLibrary.getAppId());
+        meta.site = AndroidBaseLibrary.getAppId();
         meta.imei = DeviceInfo.getImei();
         meta.androidid = DeviceInfo.getAndroidId();
         meta.mac = DeviceInfo.getMacAddress();
@@ -194,19 +183,19 @@ public class Track {
             app.appname = pkgInfo.appName;
             app.pkg = pkgInfo.pkgName;
             app.version = pkgInfo.verName;
-            app.versioncode = String.valueOf(pkgInfo.verCode);
+            app.versioncode = pkgInfo.verCode;
 
             meta.apps.add(app);
         }
 
-        String metaEncrypted = null;
-        String metaStr = new Gson().toJson(meta);
-        try {
-            metaEncrypted = AESCrypt.encrypt("licaigc#2016$", metaStr);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        String metaEncrypted = null;
+//        String metaStr = new Gson().toJson(meta);
+//        try {
+//            metaEncrypted = AESCrypt.encrypt("01234567890123456789012345678901", metaStr);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
-        return metaEncrypted;
+        return new Gson().toJson(meta);
     }
 }

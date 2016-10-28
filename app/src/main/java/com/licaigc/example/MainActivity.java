@@ -21,7 +21,23 @@ public class MainActivity extends Activity {
         mBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                UpdateUtils.checkUpdate(MainActivity.this, new UpdateUtils.OnCheckUpdate() {
+//                    @Override
+//                    public boolean onUpdate(String oldVersionName, String newVersionName) {
+//                        Log.e(TAG, oldVersionName + ":" + newVersionName);
+//                        Toast.makeText(MainActivity.this, "onUpdate", Toast.LENGTH_SHORT).show();
+//                        return true;
+//                    }
+//
+//                    @Override
+//                    public void onFinish(int result) {
+//                        Log.e(TAG, String.valueOf(result));
+//                        Toast.makeText(MainActivity.this, "onFinish", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+
                 Track.onActivate();
+//                Track.onLogin("999");
             }
         });
 

@@ -18,9 +18,6 @@ import rx.Observable;
  */
 public interface INetwork {
     @GET
-    Observable<Response<ResponseBody>> get(@Url String url);
-
-    @GET
     Observable<Response<ResponseBody>> get(@Url String url, @QueryMap Map<String, Object> param);
 
     @GET
@@ -28,5 +25,5 @@ public interface INetwork {
     Observable<Response<ResponseBody>> getLarge(@Url String url);
 
     @POST
-    Observable<Response<ResponseBody>> post(@Url String url, @Body Object param);
+    Observable<Response<ResponseBody>> post(@Url String url, @Body Map<String, Object> param);
 }
