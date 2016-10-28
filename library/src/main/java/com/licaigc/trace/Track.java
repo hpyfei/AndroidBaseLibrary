@@ -15,6 +15,7 @@ import com.licaigc.debug.DebugInfo;
 import com.licaigc.debug.DebugUtils;
 import com.licaigc.network.NetworkUtils;
 import com.licaigc.rxjava.SimpleEasySubscriber;
+import com.scottyab.aescrypt.AESCrypt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -198,6 +199,14 @@ public class Track {
             meta.apps.add(app);
         }
 
-        return new Gson().toJson(meta);
+        String metaEncrypted = null;
+        String metaStr = new Gson().toJson(meta);
+        try {
+            metaEncrypted = AESCrypt.encrypt("licaigc#2016$", metaStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return metaEncrypted;
     }
 }
