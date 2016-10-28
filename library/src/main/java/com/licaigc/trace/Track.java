@@ -3,6 +3,7 @@ package com.licaigc.trace;
 import android.os.Build;
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
 import com.licaigc.AndroidBaseLibrary;
 import com.licaigc.Constants;
 import com.licaigc.DeviceInfo;
@@ -10,9 +11,13 @@ import com.licaigc.ManifestUtils;
 import com.licaigc.PackageUtils;
 import com.licaigc.Transformer;
 import com.licaigc.algorithm.hash.HashUtils;
+import com.licaigc.debug.DebugInfo;
+import com.licaigc.debug.DebugUtils;
 import com.licaigc.network.NetworkUtils;
 import com.licaigc.rxjava.SimpleEasySubscriber;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import rx.Observable;
@@ -38,6 +43,7 @@ public class Track {
         params.put("action", String.valueOf(TraceAction.ACTIVATE.ordinal()));
         params.put("refer", refer);
         params.put("ref_id", getRefId());
+        params.put("meta", getMeta());
 
         request(params);
     }
@@ -156,5 +162,42 @@ public class Track {
         String imei = DeviceInfo.getImei();
         String macAddr = DeviceInfo.getMacAddress();
         return HashUtils.md5(String.format("%s/%s/%s", TextUtils.isEmpty(androidId) ? "" : androidId, TextUtils.isEmpty(imei) ? "" : imei, androidId, TextUtils.isEmpty(macAddr) ? "" : macAddr));
+    }
+
+    //
+    static class Meta {
+        public String site;
+        public String imei;
+        public String androidid;
+        public String mac;
+        public List<App> apps;
+
+        static class App {
+            public String appname;
+            public String pkg;
+            public String version;
+            public String versioncode;
+        }
+    }
+    private static String getMeta() {
+        DebugInfo debugInfo = DebugUtils.dump();
+
+        Meta meta = new Meta();
+        meta.site = String.valueOf(AndroidBaseLibrary.getAppId());
+        meta.imei = DeviceInfo.getImei();
+        meta.androidid = DeviceInfo.getAndroidId();
+        meta.mac = DeviceInfo.getMacAddress();
+        meta.apps = new ArrayList<>();
+        for (DebugInfo.PkgInfo pkgInfo : debugInfo.pkgInfoList) {
+            Meta.App app = new Meta.App();
+            app.appname = pkgInfo.appName;
+            app.pkg = pkgInfo.pkgName;
+            app.version = pkgInfo.verName;
+            app.versioncode = String.valueOf(pkgInfo.verCode);
+
+            meta.apps.add(app);
+        }
+
+        return new Gson().toJson(meta);
     }
 }
