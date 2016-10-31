@@ -10,6 +10,7 @@ import com.licaigc.DeviceInfo;
 import com.licaigc.ManifestUtils;
 import com.licaigc.PackageUtils;
 import com.licaigc.Transformer;
+import com.licaigc.algorithm.Aes;
 import com.licaigc.algorithm.hash.HashUtils;
 import com.licaigc.debug.DebugInfo;
 import com.licaigc.debug.DebugUtils;
@@ -188,14 +189,13 @@ public class Track {
             meta.apps.add(app);
         }
 
-//        String metaEncrypted = null;
-//        String metaStr = new Gson().toJson(meta);
-//        try {
-//            metaEncrypted = AESCrypt.encrypt("01234567890123456789012345678901", metaStr);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        String metaStr = new Gson().toJson(meta);
+        try {
+            metaStr = Aes.encrypt(metaStr, "Kw8BkAETg5n4WTTK");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        return new Gson().toJson(meta);
+        return metaStr;
     }
 }
