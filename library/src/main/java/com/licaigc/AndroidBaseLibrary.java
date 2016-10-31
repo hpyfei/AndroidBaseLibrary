@@ -149,11 +149,11 @@ public class AndroidBaseLibrary {
             switch (code) {
                 case 0:
                     StringBuilder stringBuilder = new StringBuilder();
-                    stringBuilder.append("Set tag(");
+                    stringBuilder.append("Set alias(");
                     if (!TextUtils.isEmpty(alias)) {
                         stringBuilder.append(alias);
                     }
-                    stringBuilder.append(") and alias(");
+                    stringBuilder.append(") and tag(");
                     String[] tagsArr = Transformer.stringCollection2Strings(tags);
                     if (tagsArr.length > 0) {
                         stringBuilder.append(tagsArr[0]);
