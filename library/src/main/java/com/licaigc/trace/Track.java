@@ -28,8 +28,8 @@ import java.util.Map;
 public class Track {
     public static final String TAG = "Track";
 
-//    private static final String URL = "http://c.guihua.com/v1/app";
-    private static final String URL = "http://192.168.11.70:33000/v1/app";
+    private static final String URL = "http://c.guihua.com/v1/app";
+//    private static final String URL = "http://192.168.11.70:33000/v1/app";
 
     // Function
     public static void onActivate() {
