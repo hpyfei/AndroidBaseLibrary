@@ -26,6 +26,11 @@ public class AndroidBaseLibrary {
     private static Context sContext;
 
     /**
+     * Is host app in debug mode
+     */
+    private static boolean sIsDebug;
+
+    /**
      * 极光推送初始化
      */
     private static final int MSG_JPUSH_ALIAS = 0x1000;
@@ -48,7 +53,11 @@ public class AndroidBaseLibrary {
      * @return
      */
     public static final boolean initialize(Context context) {
+        return initialize(context, false);
+    }
+    public static final boolean initialize(Context context, boolean isDebug) {
         sContext = context.getApplicationContext();
+        sIsDebug = isDebug;
         sHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -56,7 +65,7 @@ public class AndroidBaseLibrary {
                     case MSG_JPUSH_ALIAS: {
                         String alias = Track.getRefId();
                         Set<String> tag = new HashSet<>();
-                        tag.add(PackageUtils.getVersionName().replace(".", "_"));   // 版本号
+                        tag.add(PackageUtils.getVersionName().replace(".", "_") + (sIsDebug ? "_test" : ""));   // 版本号
                         tag.add(ManifestUtils.getMeta("UMENG_CHANNEL"));            // 渠道
                         String pkgName = AndroidBaseLibrary.getContext().getPackageName();
                         if (Constants.PKG_TIMI.compareToIgnoreCase(pkgName) != 0
@@ -118,6 +127,10 @@ public class AndroidBaseLibrary {
      */
     public static Context getContext() {
         return sContext;
+    }
+
+    public static boolean isDebug() {
+        return sIsDebug;
     }
 
     public static int getAppId() {
