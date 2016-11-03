@@ -197,15 +197,6 @@ public class ChainCalendar {
         return this;
     }
 
-    /**
-     *
-     * @return
-     * @deprecated use {@link #get()} instead
-     */
-    public Calendar getCalendar() {
-        return mCalendar;
-    }
-
     public Calendar get() {
         return mCalendar;
     }
