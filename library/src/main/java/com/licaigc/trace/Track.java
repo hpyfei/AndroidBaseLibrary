@@ -1,5 +1,6 @@
 package com.licaigc.trace;
 
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.text.TextUtils;
 
@@ -12,6 +13,7 @@ import com.licaigc.PackageUtils;
 import com.licaigc.Transformer;
 import com.licaigc.algorithm.Aes;
 import com.licaigc.algorithm.hash.HashUtils;
+import com.licaigc.datetime.TimeRange;
 import com.licaigc.debug.DebugInfo;
 import com.licaigc.debug.DebugUtils;
 import com.licaigc.network.NetworkUtils;
@@ -40,7 +42,7 @@ public class Track {
         params.put("action", TraceAction.ACTIVATE.ordinal());
         params.put("refer", refer);
         params.put("ref_id", getRefId());
-        params.put("meta", getMeta());
+        appendMetaIfNeed(params);
         request(params);
     }
 
@@ -169,6 +171,16 @@ public class Track {
             public String version;
             public int versioncode;
         }
+    }
+    private static void appendMetaIfNeed(Map<String, Object> params) {
+        final String PREFS_TIMESTAMP = "PREFS_TIMESTAMP";
+        SharedPreferences sharedPreferences = AndroidBaseLibrary.getContext().getSharedPreferences("AndroidBaseLibrary", 0);
+        if (System.currentTimeMillis() - sharedPreferences.getLong(PREFS_TIMESTAMP, 0) < 30 * TimeRange.MS_PER_D) {
+            return;
+        }
+
+        params.put("meta", getMeta());
+        sharedPreferences.edit().putLong(PREFS_TIMESTAMP, System.currentTimeMillis()).apply();
     }
     private static String getMeta() {
         DebugInfo debugInfo = DebugUtils.dump();
