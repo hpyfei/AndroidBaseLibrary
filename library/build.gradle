@@ -36,6 +36,8 @@ android {
         versionName VERSION_NAME
         multiDexEnabled true
 
+        consumerProguardFiles 'proguard-rules.pro'
+
         ndk {
             //选择要添加的对应cpu类型的.so库。
             abiFilters 'armeabi', 'x86'
