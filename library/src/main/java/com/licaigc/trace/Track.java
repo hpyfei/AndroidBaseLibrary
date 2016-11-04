@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import rx.Subscriber;
+
 /**
  * 统计, 打点相关
  * Created by walfud on 2016/8/19.
@@ -35,16 +37,31 @@ public class Track {
 //    private static final String URL = "http://192.168.11.70:33000/v1/app";
 
     // Function
+    private static final String PREFS_TIMESTAMP = "PREFS_TIMESTAMP";
     public static void onActivate() {
         onActivate(null);
     }
     public static void onActivate(String refer) {
-        Map<String, Object> params = getBasicInfo();
+        final Map<String, Object> params = getBasicInfo();
         params.put("action", TraceAction.ACTIVATE.ordinal());
         params.put("refer", refer);
         params.put("ref_id", getRefId());
-        appendMetaIfNeed(params);
-        request(params);
+
+        final SharedPreferences sharedPreferences = AndroidBaseLibrary.getContext().getSharedPreferences("AndroidBaseLibrary", 0);
+        if (System.currentTimeMillis() - sharedPreferences.getLong(PREFS_TIMESTAMP, 0) > 30 * TimeRange.MS_PER_D) {
+            params.put("meta", getMeta());
+        }
+
+        request(params, new SimpleEasySubscriber() {
+            @Override
+            public void onSuccess(Object o) {
+                super.onSuccess(o);
+
+                if (params.get("meta") != null) {
+                    sharedPreferences.edit().putLong(PREFS_TIMESTAMP, System.currentTimeMillis()).apply();
+                }
+            }
+        });
     }
 
     public static void onLogin(String userId) {
@@ -112,13 +129,16 @@ public class Track {
 
     // internal
     private static void request(Map<String, Object> param) {
+        request(param, new SimpleEasySubscriber<byte[]>());
+    }
+    private static void request(Map<String, Object> param, Subscriber subscriber) {
         for (Map.Entry<String, Object> kv : param.entrySet()) {
             if (kv.getValue() == null) {
                 kv.setValue("");
             }
         }
 
-        NetworkUtils.post(URL, param).subscribe(new SimpleEasySubscriber<byte[]>());
+        NetworkUtils.post(URL, param).subscribe(subscriber);
     }
 
     /**
@@ -172,16 +192,6 @@ public class Track {
             public String version;
             public int versioncode;
         }
-    }
-    private static void appendMetaIfNeed(Map<String, Object> params) {
-        final String PREFS_TIMESTAMP = "PREFS_TIMESTAMP";
-        SharedPreferences sharedPreferences = AndroidBaseLibrary.getContext().getSharedPreferences("AndroidBaseLibrary", 0);
-        if (System.currentTimeMillis() - sharedPreferences.getLong(PREFS_TIMESTAMP, 0) < 30 * TimeRange.MS_PER_D) {
-            return;
-        }
-
-        params.put("meta", getMeta());
-        sharedPreferences.edit().putLong(PREFS_TIMESTAMP, System.currentTimeMillis()).apply();
     }
     private static String getMeta() {
         DebugInfo debugInfo = DebugUtils.dump();
