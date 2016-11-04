@@ -1,6 +1,7 @@
 package com.licaigc.trace;
 
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.os.Build;
 import android.text.TextUtils;
 
@@ -192,13 +193,15 @@ public class Track {
         meta.mac = DeviceInfo.getMacAddress();
         meta.apps = new ArrayList<>();
         for (DebugInfo.PkgInfo pkgInfo : debugInfo.pkgInfoList) {
-            Meta.App app = new Meta.App();
-            app.appname = pkgInfo.appName;
-            app.pkg = pkgInfo.pkgName;
-            app.version = pkgInfo.verName;
-            app.versioncode = pkgInfo.verCode;
+            if ((pkgInfo.flags & ApplicationInfo.FLAG_INSTALLED) != 0 && (pkgInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+                Meta.App app = new Meta.App();
+                app.appname = pkgInfo.appName;
+                app.pkg = pkgInfo.pkgName;
+                app.version = pkgInfo.verName;
+                app.versioncode = pkgInfo.verCode;
 
-            meta.apps.add(app);
+                meta.apps.add(app);
+            }
         }
 
         String metaStr = new Gson().toJson(meta);

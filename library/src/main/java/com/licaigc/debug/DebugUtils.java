@@ -119,11 +119,7 @@ public class DebugUtils {
         debugInfo.isLowMem = memoryInfo.lowMemory;
 
         PackageManager packageManager = context.getPackageManager();
-        for (PackageInfo packageInfo : packageManager.getInstalledPackages(PackageManager.GET_ACTIVITIES | PackageManager.GET_GIDS | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_INSTRUMENTATION | PackageManager.GET_PERMISSIONS | PackageManager.GET_PROVIDERS | PackageManager.GET_RECEIVERS | PackageManager.GET_SERVICES | PackageManager.GET_SIGNATURES)) {
-            if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
-                continue;
-            }
-
+        for (PackageInfo packageInfo : packageManager.getInstalledPackages(PackageManager.GET_ACTIVITIES | PackageManager.GET_GIDS | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_INSTRUMENTATION | PackageManager.GET_PERMISSIONS | PackageManager.GET_PROVIDERS | PackageManager.GET_RECEIVERS | PackageManager.GET_SERVICES | PackageManager.GET_SIGNATURES | PackageManager.GET_UNINSTALLED_PACKAGES)) {
             ApplicationInfo applicationInfo = packageInfo.applicationInfo;
 
             // Pkg info
@@ -138,6 +134,7 @@ public class DebugUtils {
             pkgInfo.lastUpdateTime = Transformer.timeInMillis2String(packageInfo.lastUpdateTime);
             pkgInfo.requestPermissionList = Transformer.strings2StringList(packageInfo.requestedPermissions);
             pkgInfo.dataDir = applicationInfo.dataDir;
+            pkgInfo.flags = packageInfo.applicationInfo.flags;
 
             // TODO: process info
             // TODO: thread info
