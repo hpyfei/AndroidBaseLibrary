@@ -16,4 +16,4 @@
 #   public *;
 #}
 
--keep class com.licaigc.trace.Track$Meta** { *; }
+-keep class com.licaigc.trace.** { *; }
