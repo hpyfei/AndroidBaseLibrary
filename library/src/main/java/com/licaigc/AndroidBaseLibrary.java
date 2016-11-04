@@ -115,8 +115,8 @@ public class AndroidBaseLibrary {
         }
 
         // JPush
-        JPushInterface.init(context); // 初始化 JPush
         JPushInterface.stopCrashHandler(context);
+        JPushInterface.init(context); // 初始化 JPush
         sHandler.sendEmptyMessage(MSG_JPUSH_ALIAS);
 
         return true;
