@@ -41,7 +41,6 @@ public class Track {
 
     // Function
     /**
-     * 不知道是什么或者不需要上传就填 `null`
      * @param refer
      * @param userId
      */
