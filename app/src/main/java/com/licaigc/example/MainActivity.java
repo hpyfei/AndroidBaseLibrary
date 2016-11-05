@@ -36,7 +36,7 @@ public class MainActivity extends Activity {
 //                    }
 //                });
 
-                Track.onActivate();
+                Track.onActivate(null, null);
 //                Track.onLogin("999");
             }
         });

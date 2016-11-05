@@ -28,6 +28,7 @@ import rx.Subscriber;
 
 /**
  * 统计, 打点相关
+ * http://www.tuluu.com/platform/cupola/wikis/home
  * Created by walfud on 2016/8/19.
  */
 public class Track {
@@ -36,12 +37,15 @@ public class Track {
     private static final String URL = "http://c.guihua.com/v1/app";
 //    private static final String URL = "http://192.168.11.70:33000/v1/app";
 
-    // Function
     private static final String PREFS_TIMESTAMP = "PREFS_TIMESTAMP";
-    public static void onActivate() {
-        onActivate(null);
-    }
-    public static void onActivate(String refer) {
+
+    // Function
+    /**
+     * 不知道是什么或者不需要上传就填 `null`
+     * @param refer
+     * @param userId
+     */
+    public static void onActivate(String refer, String userId) {
         final Map<String, Object> params = getBasicInfo();
         params.put("action", TraceAction.ACTIVATE.ordinal());
         params.put("refer", refer);
@@ -49,7 +53,7 @@ public class Track {
 
         final SharedPreferences sharedPreferences = AndroidBaseLibrary.getContext().getSharedPreferences("AndroidBaseLibrary", 0);
         if (System.currentTimeMillis() - sharedPreferences.getLong(PREFS_TIMESTAMP, 0) > 30 * TimeRange.MS_PER_D) {
-            params.put("meta", getMeta());
+            params.put("meta", getMeta(userId));
         }
 
         request(params, new SimpleEasySubscriber() {
@@ -181,6 +185,7 @@ public class Track {
     //
     static class Meta {
         public int site;
+        public String uid;
         public String imei;
         public String androidid;
         public String mac;
@@ -193,11 +198,12 @@ public class Track {
             public int versioncode;
         }
     }
-    private static String getMeta() {
+    private static String getMeta(String userId) {
         DebugInfo debugInfo = DebugUtils.dump();
 
         Meta meta = new Meta();
         meta.site = AndroidBaseLibrary.getAppId();
+        meta.uid = userId;
         meta.imei = DeviceInfo.getImei();
         meta.androidid = DeviceInfo.getAndroidId();
         meta.mac = DeviceInfo.getMacAddress();
