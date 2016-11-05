@@ -41,6 +41,7 @@ public class Track {
 
     // Function
     /**
+     * 不知道是什么或者不需要上传就填 `null`
      * @param refer
      * @param userId
      */
@@ -202,7 +203,7 @@ public class Track {
 
         Meta meta = new Meta();
         meta.site = AndroidBaseLibrary.getAppId();
-        meta.uid = userId;
+        meta.uid = userId == null ? "" : userId;
         meta.imei = DeviceInfo.getImei();
         meta.androidid = DeviceInfo.getAndroidId();
         meta.mac = DeviceInfo.getMacAddress();
