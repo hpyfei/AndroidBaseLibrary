@@ -109,7 +109,7 @@ public class DebugUtils {
         debugInfo.firstBootTime = Transformer.timeInMillis2String(Build.TIME);
         debugInfo.osName = Build.DISPLAY;
         debugInfo.verCode = Build.VERSION.SDK_INT;
-        
+
         debugInfo.isRoot = isRoot();
         debugInfo.imei = telephonyManager.getDeviceId();
         ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
@@ -119,7 +119,7 @@ public class DebugUtils {
         debugInfo.isLowMem = memoryInfo.lowMemory;
 
         PackageManager packageManager = context.getPackageManager();
-        for (PackageInfo packageInfo : packageManager.getInstalledPackages(PackageManager.GET_ACTIVITIES | PackageManager.GET_GIDS | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_INSTRUMENTATION | PackageManager.GET_PERMISSIONS | PackageManager.GET_PROVIDERS | PackageManager.GET_RECEIVERS | PackageManager.GET_SERVICES | PackageManager.GET_SIGNATURES | PackageManager.GET_UNINSTALLED_PACKAGES)) {
+        for (PackageInfo packageInfo : packageManager.getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES | PackageManager.GET_GIDS | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_INSTRUMENTATION | PackageManager.GET_PERMISSIONS | PackageManager.GET_PROVIDERS | PackageManager.GET_RECEIVERS | PackageManager.GET_SERVICES | PackageManager.GET_SIGNATURES)) {
             ApplicationInfo applicationInfo = packageInfo.applicationInfo;
 
             // Pkg info

@@ -209,7 +209,7 @@ public class Track {
         meta.mac = DeviceInfo.getMacAddress();
         meta.apps = new ArrayList<>();
         for (DebugInfo.PkgInfo pkgInfo : debugInfo.pkgInfoList) {
-            if ((pkgInfo.flags & ApplicationInfo.FLAG_INSTALLED) != 0 && (pkgInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+              if ((pkgInfo.flags & ApplicationInfo.FLAG_INSTALLED) != 0 && (pkgInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
                 Meta.App app = new Meta.App();
                 app.appname = pkgInfo.appName;
                 app.pkg = pkgInfo.pkgName;
