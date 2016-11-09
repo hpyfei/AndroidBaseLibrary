@@ -73,15 +73,15 @@ public class AndroidBaseLibrary {
                             tag.add("Timi记账");
                         }
                         if (Constants.PKG_TALICAI.compareToIgnoreCase(pkgName) != 0
-                                && PackageUtils.isTalicaiInstalled()) {             // 安装 timi 的用户
+                                && PackageUtils.isTalicaiInstalled()) {             // 安装 她理财 的用户
                             tag.add("她理财");
                         }
                         if (Constants.PKG_GUIHUA.compareToIgnoreCase(pkgName) != 0
-                                && PackageUtils.isHaoguihuaInstalled()) {           // 安装 timi 的用户
+                                && PackageUtils.isHaoguihuaInstalled()) {           // 安装 好规划 的用户
                             tag.add("好规划");
                         }
                         if (Constants.PKG_JIJINDOU.compareToIgnoreCase(pkgName) != 0
-                                && PackageUtils.isJijindouInstalled()) {            // 安装 timi 的用户
+                                && PackageUtils.isJijindouInstalled()) {            // 安装 基金豆 的用户
                             tag.add("基金豆");
                         }
                         JPushInterface.setAliasAndTags(sContext, alias, tag, sAliasCallback);
