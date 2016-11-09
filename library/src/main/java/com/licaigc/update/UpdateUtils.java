@@ -132,7 +132,6 @@ public class UpdateUtils {
             return;
         }
         updateInterface.checkUpdate(AndroidBaseLibrary.getContext().getPackageName(), packageInfo.versionName, 1, channel)
-//        updateInterface.checkUpdate("com.talicai.timiclient", "2.3.4", 1, "anzhuoshichang")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .concatMap(new Func1<Response<ResponseCheckUpdate>, Observable<ResponseCheckUpdate>>() {
@@ -198,7 +197,7 @@ public class UpdateUtils {
                 .map(new Func1<ResponseCheckUpdate, Void>() {
                     @Override
                     public Void call(final ResponseCheckUpdate responseCheckUpdate) {
-                        final Dialog dialog = new Dialog(context, android.R.style.Theme_Material_Dialog);
+                        final Dialog dialog = new Dialog(context);
                         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                         dialog.setContentView(R.layout.dialog_check_update);
                         TextView titleTv = ViewUtils.findViewById(dialog, R.id.tv_title);
