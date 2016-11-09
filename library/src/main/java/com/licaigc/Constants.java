@@ -35,7 +35,7 @@ public class Constants {
     // Primary Color
     public static final int APP_PRIMARY_COLOR_UNKNOWN   = 0xFF3F51B5;
     public static final int APP_PRIMARY_COLOR_TALICAI   = 0xFFDA5C83;
-    public static final int APP_PRIMARY_COLOR_GUIHUA    = 0xFF30455D;
+    public static final int APP_PRIMARY_COLOR_GUIHUA    = 0xFF6192B3;
     public static final int APP_PRIMARY_COLOR_TIMI      = 0xFFF5A623;
     public static final int APP_PRIMARY_COLOR_JIJINDOU  = 0xFFDA5162;
 }
