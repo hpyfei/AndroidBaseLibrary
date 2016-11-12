@@ -1,4 +1,4 @@
-package com.licaigc;
+package com.licaigc.android;
 
 import android.os.Handler;
 import android.os.Message;

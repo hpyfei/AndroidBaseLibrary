@@ -14,8 +14,8 @@ import android.telephony.TelephonyManager;
 
 import com.licaigc.AndroidBaseLibrary;
 import com.licaigc.Constants;
-import com.licaigc.PermissionUtils;
 import com.licaigc.algorithm.hash.HashUtils;
+import com.licaigc.android.PermissionUtils;
 import com.licaigc.io.IoUtils;
 import com.licaigc.rxjava.SimpleEasySubscriber;
 

@@ -1,7 +1,9 @@
-package com.licaigc;
+package com.licaigc.android;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+
+import com.licaigc.AndroidBaseLibrary;
 
 /**
  * Created by walfud on 2016/7/7.

@@ -15,8 +15,6 @@ android {
                 JPUSH_PKGNAME : applicationId,
                 JPUSH_APPKEY : project.hasProperty('JPUSH_APPKEY') ? JPUSH_APPKEY : System.getenv('JPUSH_APPKEY'),   //JPush上注册的包名对应的appkey.
                 JPUSH_CHANNEL : "developer-default",            //暂时填写默认值即可.
-
-                UMENG_APPKEY: project.hasProperty('UMENG_APPKEY') ? UMENG_APPKEY : System.getenv('UMENG_APPKEY'),
         ]
     }
     buildTypes {
@@ -27,10 +25,6 @@ android {
     }
     productFlavors {
         licaigc {}
-
-        productFlavors.all { flavor ->
-            flavor.manifestPlaceholders = [UMENG_CHANNEL: name]
-        }
     }
 }
 

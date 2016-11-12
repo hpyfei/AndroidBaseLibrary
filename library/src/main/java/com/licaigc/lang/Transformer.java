@@ -1,4 +1,4 @@
-package com.licaigc;
+package com.licaigc.lang;
 
 import android.text.TextUtils;
 import android.util.Pair;

@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 
 import com.licaigc.AndroidBaseLibrary;
-import com.licaigc.PackageUtils;
+import com.licaigc.android.PackageUtils;
 
 import java.io.File;
 

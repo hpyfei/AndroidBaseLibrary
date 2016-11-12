@@ -1,4 +1,6 @@
-package com.licaigc;
+package com.licaigc.android;
+
+import com.licaigc.AndroidBaseLibrary;
 
 /**
  * Created by walfud on 2015/10/3.

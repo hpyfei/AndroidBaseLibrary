@@ -6,7 +6,11 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.licaigc.android.ManifestUtils;
+import com.licaigc.android.PackageUtils;
+import com.licaigc.lang.Transformer;
 import com.licaigc.trace.Track;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -53,9 +57,9 @@ public class AndroidBaseLibrary {
      * @return
      */
     public static final boolean initialize(Context context) {
-        return initialize(context, false);
+        return initialize(context, false, ManifestUtils.getMeta("UMENG_CHANNEL"));
     }
-    public static final boolean initialize(Context context, boolean isDebug) {
+    public static final boolean initialize(Context context, boolean isDebug, final String channel) {
         sContext = context.getApplicationContext();
         sIsDebug = isDebug;
         sHandler = new Handler() {
@@ -66,7 +70,7 @@ public class AndroidBaseLibrary {
                         String alias = Track.getRefId();
                         Set<String> tag = new HashSet<>();
                         tag.add(PackageUtils.getVersionName().replace(".", "_") + (sIsDebug ? "_test" : ""));   // 版本号
-                        tag.add(ManifestUtils.getMeta("UMENG_CHANNEL"));            // 渠道
+                        tag.add(channel);                                                                       // 渠道
                         String pkgName = AndroidBaseLibrary.getContext().getPackageName();
                         if (Constants.PKG_TIMI.compareToIgnoreCase(pkgName) != 0
                                 && PackageUtils.isTimiInstalled()) {                // 安装 timi 的用户
@@ -94,21 +98,26 @@ public class AndroidBaseLibrary {
             }
         };
 
+        String umengAppKey = null;
         String pkgName = AndroidBaseLibrary.getContext().getPackageName();
         if (false) {
             // Stub
         } else if (Constants.PKG_TALICAI.equals(pkgName)) {
             sAppId = Constants.APP_ID_TALICAI;
             sPrimaryColor = Constants.APP_PRIMARY_COLOR_TALICAI;
+            umengAppKey = Constants.UMENG_APPKEY_TALICAI;
         } else if (Constants.PKG_GUIHUA.equals(pkgName)) {
             sAppId = Constants.APP_ID_GUIHUA;
             sPrimaryColor = Constants.APP_PRIMARY_COLOR_GUIHUA;
+            umengAppKey = Constants.UMENG_APPKEY_GUIHUA;
         } else if (Constants.PKG_TIMI.equals(pkgName)) {
             sAppId = Constants.APP_ID_TIMI;
             sPrimaryColor = Constants.APP_PRIMARY_COLOR_TIMI;
+            umengAppKey = Constants.UMENG_APPKEY_TIMI;
         } else if (Constants.PKG_JIJINDOU.equals(pkgName)) {
             sAppId = Constants.APP_ID_JIJINDOU;
             sPrimaryColor = Constants.APP_PRIMARY_COLOR_JIJINDOU;
+            umengAppKey = Constants.UMENG_APPKEY_JIJINDOU;
         } else {
             sAppId = Constants.APP_ID_UNKNOWN;
             sPrimaryColor = Constants.APP_PRIMARY_COLOR_UNKNOWN;
@@ -118,6 +127,9 @@ public class AndroidBaseLibrary {
         JPushInterface.stopCrashHandler(context);
         JPushInterface.init(context); // 初始化 JPush
         sHandler.sendEmptyMessage(MSG_JPUSH_ALIAS);
+
+        // 友盟统计
+        MobclickAgent.startWithConfigure(new MobclickAgent.UMAnalyticsConfig(context, umengAppKey, channel, MobclickAgent.EScenarioType.E_UM_NORMAL, false));
 
         return true;
     }

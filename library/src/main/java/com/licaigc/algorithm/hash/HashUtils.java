@@ -1,6 +1,6 @@
 package com.licaigc.algorithm.hash;
 
-import com.licaigc.Transformer;
+import com.licaigc.lang.Transformer;
 
 import java.security.MessageDigest;
 

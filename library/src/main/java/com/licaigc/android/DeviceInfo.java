@@ -1,10 +1,12 @@
-package com.licaigc;
+package com.licaigc.android;
 
 import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+
+import com.licaigc.AndroidBaseLibrary;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;

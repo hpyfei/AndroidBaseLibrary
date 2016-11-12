@@ -9,7 +9,7 @@ import android.os.Build;
 import android.telephony.TelephonyManager;
 
 import com.licaigc.AndroidBaseLibrary;
-import com.licaigc.Transformer;
+import com.licaigc.lang.Transformer;
 
 import java.io.File;
 

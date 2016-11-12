@@ -1,7 +1,7 @@
 package com.licaigc.collection;
 
-import com.licaigc.ObjectUtils;
 import com.licaigc.algorithm.Comparator;
+import com.licaigc.lang.ObjectUtils;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.licaigc;
+package com.licaigc.lang;
 
 /**
  * Created by walfud on 2015/12/18.

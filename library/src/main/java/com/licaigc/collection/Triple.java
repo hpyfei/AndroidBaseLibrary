@@ -1,6 +1,6 @@
 package com.licaigc.collection;
 
-import com.licaigc.ObjectUtils;
+import com.licaigc.lang.ObjectUtils;
 
 /**
  * Created by walfud on 2016/3/11.

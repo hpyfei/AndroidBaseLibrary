@@ -15,9 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.licaigc.AndroidBaseLibrary;
-import com.licaigc.ManifestUtils;
-import com.licaigc.PackageUtils;
-import com.licaigc.PermissionUtils;
+import com.licaigc.android.ManifestUtils;
+import com.licaigc.android.PackageUtils;
+import com.licaigc.android.PermissionUtils;
 import com.licaigc.library.R;
 import com.licaigc.network.NetworkUtils;
 import com.licaigc.rxjava.SimpleEasySubscriber;
