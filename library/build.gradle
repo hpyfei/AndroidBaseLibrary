@@ -45,9 +45,15 @@ android {
         }
 
         manifestPlaceholders = [
+                // 极光
                 JPUSH_PKGNAME : "JPUSH_PKGNAME",
-                JPUSH_APPKEY : "JPUSH_APPKEY", //JPush上注册的包名对应的appkey.
+                JPUSH_APPKEY : "JPUSH_APPKEY",       //JPush上注册的包名对应的appkey.
                 JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
+
+                // 友盟
+                // 注意这里的单引号是为了在 '引用方的 merge 过程' 中继续替换变量, 不要乱改
+                UMENG_APPKEY: '${UMENG_APPKEY}',
+                UMENG_CHANNEL: '${UMENG_CHANNEL}',
         ]
     }
     buildTypes {
@@ -97,6 +103,8 @@ dependencies {
     apt 'org.parceler:parceler:1.1.5'
 
     compile 'cn.jiguang:jpush:2.1.9'
+
+    compile 'com.umeng.analytics:analytics:6.0.4'
 }
 
 

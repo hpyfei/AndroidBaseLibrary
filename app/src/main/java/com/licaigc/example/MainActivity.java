@@ -2,11 +2,12 @@ package com.licaigc.example;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.licaigc.AndroidBaseLibrary;
-import com.licaigc.trace.Track;
+import com.licaigc.ManifestUtils;
 
 public class MainActivity extends Activity {
     public static final String TAG = "MainActivity";
@@ -36,8 +37,9 @@ public class MainActivity extends Activity {
 //                    }
 //                });
 
-                Track.onActivate(null, null);
+//                Track.onActivate(null, null);
 //                Track.onLogin("999");
+                Log.e("", ManifestUtils.getMeta("UMENG_CHANNEL"));
             }
         });
 

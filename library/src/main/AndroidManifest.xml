@@ -7,6 +7,9 @@
         android:supportsRtl="true"
         >
 
+        <meta-data android:name="UMENG_APPKEY" android:value="${UMENG_APPKEY}"></meta-data>
+        <meta-data android:name="UMENG_CHANNEL" android:value="${UMENG_CHANNEL}"></meta-data>
+
     </application>
 
 </manifest>
