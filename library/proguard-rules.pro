@@ -16,4 +16,17 @@
 #   public *;
 #}
 
+# Track 统计
 -keep class com.licaigc.trace.** { *; }
+
+# 友盟: http://dev.umeng.com/analytics/android-doc/integration#1
+-keepclassmembers class * {
+   public <init> (org.json.JSONObject);
+}
+-keep public class **.R$*{
+public static final int *;
+}
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
