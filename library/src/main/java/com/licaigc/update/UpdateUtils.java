@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.licaigc.AndroidBaseLibrary;
-import com.licaigc.android.ManifestUtils;
 import com.licaigc.android.PackageUtils;
 import com.licaigc.android.PermissionUtils;
 import com.licaigc.library.R;
@@ -98,7 +97,7 @@ public class UpdateUtils {
      * @param onCheckUpdate
      */
     public static void checkUpdate(final Activity context, final OnCheckUpdate onCheckUpdate) {
-        checkUpdate(context, ManifestUtils.getMeta("UMENG_CHANNEL"), onCheckUpdate);
+        checkUpdate(context, AndroidBaseLibrary.getChannel(), onCheckUpdate);
     }
     public static void checkUpdate(final Activity context, String channel, final OnCheckUpdate onCheckUpdate) {
         if (!PermissionUtils.hasPermission("android.permission.WRITE_EXTERNAL_STORAGE")) {

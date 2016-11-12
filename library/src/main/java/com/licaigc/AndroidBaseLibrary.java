@@ -51,6 +51,8 @@ public class AndroidBaseLibrary {
      */
     private static int sPrimaryColor;
 
+    private static String sChannel;
+
     /**
      *  主线程调用
      * @param context
@@ -62,6 +64,7 @@ public class AndroidBaseLibrary {
     public static final boolean initialize(Context context, boolean isDebug, final String channel) {
         sContext = context.getApplicationContext();
         sIsDebug = isDebug;
+        sChannel = channel;
         sHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -152,6 +155,10 @@ public class AndroidBaseLibrary {
 
     public static int getPrimaryColor() {
         return sPrimaryColor;
+    }
+
+    public static String getChannel() {
+        return sChannel;
     }
 
     //
