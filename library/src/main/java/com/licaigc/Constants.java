@@ -39,6 +39,12 @@ public class Constants {
     public static final int APP_PRIMARY_COLOR_TIMI      = 0xFFF5A623;
     public static final int APP_PRIMARY_COLOR_JIJINDOU  = 0xFFDA5162;
 
+    // 极光
+    public static final String JPUSH_APPKEY_TALICAI  = "034cab61ec4953691b67210f";
+    public static final String JPUSH_APPKEY_GUIHUA   = "30608388949216857a84022c";
+    public static final String JPUSH_APPKEY_TIMI     = "11a2e9b8b491c9ab96c6724a";
+    public static final String JPUSH_APPKEY_JIJINDOU = "5302816115044b6bcfa9e678";
+
     // 友盟 APP_KEY
     public static final String UMENG_APPKEY_TALICAI  = "5292dbff56240b905810d1bc";
     public static final String UMENG_APPKEY_GUIHUA   = "55ac9d63e0f55a7dff002835";

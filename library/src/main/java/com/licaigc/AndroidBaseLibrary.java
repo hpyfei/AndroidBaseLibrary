@@ -98,6 +98,7 @@ public class AndroidBaseLibrary {
             }
         };
 
+        String jpushAppKey = null;
         String umengAppKey = null;
         String pkgName = AndroidBaseLibrary.getContext().getPackageName();
         if (false) {
@@ -105,18 +106,22 @@ public class AndroidBaseLibrary {
         } else if (Constants.PKG_TALICAI.equals(pkgName)) {
             sAppId = Constants.APP_ID_TALICAI;
             sPrimaryColor = Constants.APP_PRIMARY_COLOR_TALICAI;
+            jpushAppKey = Constants.JPUSH_APPKEY_TALICAI;
             umengAppKey = Constants.UMENG_APPKEY_TALICAI;
         } else if (Constants.PKG_GUIHUA.equals(pkgName)) {
             sAppId = Constants.APP_ID_GUIHUA;
             sPrimaryColor = Constants.APP_PRIMARY_COLOR_GUIHUA;
+            jpushAppKey = Constants.JPUSH_APPKEY_GUIHUA;
             umengAppKey = Constants.UMENG_APPKEY_GUIHUA;
         } else if (Constants.PKG_TIMI.equals(pkgName)) {
             sAppId = Constants.APP_ID_TIMI;
             sPrimaryColor = Constants.APP_PRIMARY_COLOR_TIMI;
+            jpushAppKey = Constants.JPUSH_APPKEY_TIMI;
             umengAppKey = Constants.UMENG_APPKEY_TIMI;
         } else if (Constants.PKG_JIJINDOU.equals(pkgName)) {
             sAppId = Constants.APP_ID_JIJINDOU;
             sPrimaryColor = Constants.APP_PRIMARY_COLOR_JIJINDOU;
+            jpushAppKey = Constants.JPUSH_APPKEY_JIJINDOU;
             umengAppKey = Constants.UMENG_APPKEY_JIJINDOU;
         } else {
             sAppId = Constants.APP_ID_UNKNOWN;

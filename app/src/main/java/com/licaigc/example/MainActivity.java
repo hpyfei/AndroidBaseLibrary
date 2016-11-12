@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        AndroidBaseLibrary.initialize(getApplicationContext(), BuildConfig.DEBUG);
+        AndroidBaseLibrary.initialize(getApplicationContext(), BuildConfig.DEBUG, BuildConfig.FLAVOR);
 
         mBtn.post(new Runnable() {
             @Override
