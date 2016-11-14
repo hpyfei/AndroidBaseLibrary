@@ -11,7 +11,6 @@ import com.licaigc.Constants;
 import com.licaigc.algorithm.Aes;
 import com.licaigc.algorithm.hash.HashUtils;
 import com.licaigc.android.DeviceInfo;
-import com.licaigc.android.ManifestUtils;
 import com.licaigc.android.PackageUtils;
 import com.licaigc.datetime.TimeRange;
 import com.licaigc.debug.DebugInfo;
@@ -158,7 +157,7 @@ public class Track {
                 "model",        Build.MANUFACTURER,
                 "appversion",   PackageUtils.getVersionName(),
                 "buildcode",    String.valueOf(PackageUtils.getVersionCode()),
-                "channel",      ManifestUtils.getMeta("UMENG_CHANNEL"),
+                "channel",      AndroidBaseLibrary.getChannel(),
                 "ip",           DeviceInfo.getIpAddress(),
                 "site",         AndroidBaseLibrary.getAppId(),
                 "lbs",          "",
