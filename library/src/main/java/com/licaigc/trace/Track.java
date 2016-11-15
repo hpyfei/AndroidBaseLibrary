@@ -3,6 +3,7 @@ package com.licaigc.trace;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.os.Build;
+import android.support.annotation.Keep;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
@@ -182,6 +183,7 @@ public class Track {
     }
 
     //
+    @Keep
     static class Meta {
         public int site;
         public String uid;
@@ -190,6 +192,7 @@ public class Track {
         public String mac;
         public List<App> apps;
 
+        @Keep
         static class App {
             public String appname;
             public String pkg;

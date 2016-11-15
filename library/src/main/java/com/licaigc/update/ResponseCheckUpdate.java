@@ -1,15 +1,18 @@
 package com.licaigc.update;
 
 import android.graphics.Bitmap;
+import android.support.annotation.Keep;
 
 /**
  * Created by walfud on 2016/7/28.
  */
+@Keep
 public class ResponseCheckUpdate {
     public String message;
 
     public Data data;
 
+    @Keep
     public static class Data {
         public String update;           // "none/full/delta"
         public String version;          // "2.3.4",
