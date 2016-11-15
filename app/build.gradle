@@ -5,12 +5,11 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-//        applicationId "com.licaigc.androidbaselibrary"
-        applicationId "com.talicai.timiclient"
+        applicationId "com.licaigc.androidbaselibrary"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 1
-        versionName "4.4.0"
+        versionCode 26
+        versionName "4.5.0"
 
         manifestPlaceholders = [
                 JPUSH_PKGNAME : applicationId,
@@ -18,29 +17,18 @@ android {
                 JPUSH_CHANNEL : "developer-default",            //暂时填写默认值即可.
         ]
     }
-    signingConfigs {
-        release {
-            storeFile file(STORE_FILE)
-            storePassword STORE_PASSWORD
-            keyAlias KEY_ALIAS
-            keyPassword KEY_PASSWORD
-        }
-    }
     buildTypes {
-        debug {
-            minifyEnabled true
+        release {
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
-            signingConfig signingConfigs.release
         }
     }
     productFlavors {
-        adsafe {}
+        licaigc {}
     }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':library')
-//    compile 'com.licaigc:androidbaselibrary:1.2.1'
 }
