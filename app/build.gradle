@@ -1,5 +1,12 @@
 apply plugin: 'com.android.application'
 
+def MAJOR_VERSION = 1
+def MINOR_VERSION = 0
+def PATCH_VERSION = 0
+
+def VERSION_CODE = MAJOR_VERSION * 100 + MINOR_VERSION * 10 + PATCH_VERSION
+def VERSION_NAME = MAJOR_VERSION + '.' + MINOR_VERSION + '.' + PATCH_VERSION
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
@@ -8,27 +15,41 @@ android {
         applicationId "com.licaigc.androidbaselibrary"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 26
-        versionName "4.5.0"
+        versionCode VERSION_CODE
+        versionName VERSION_NAME
 
         manifestPlaceholders = [
                 JPUSH_PKGNAME : applicationId,
-                JPUSH_APPKEY : project.hasProperty('JPUSH_APPKEY') ? JPUSH_APPKEY : System.getenv('JPUSH_APPKEY'),   //JPush上注册的包名对应的appkey.
+                JPUSH_APPKEY : getProp('JPUSH_APPKEY'),   //JPush上注册的包名对应的appkey.
                 JPUSH_CHANNEL : "developer-default",            //暂时填写默认值即可.
         ]
     }
+    signingConfigs {
+        release {
+            storeFile file(getProp('STORE_FILE'))
+            storePassword getProp('STORE_PASSWORD')
+            keyAlias getProp('KEY_ALIAS')
+            keyPassword getProp('KEY_PASSWORD')
+        }
+    }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     productFlavors {
         licaigc {}
+        timi {}
     }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':library')
+}
+
+def getProp(keyName) {
+    project.hasProperty(keyName) ? keyName : System.getenv(keyName)
 }
