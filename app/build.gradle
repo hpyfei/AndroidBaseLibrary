@@ -26,7 +26,7 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file(getProp('STORE_FILE'))
+            storeFile file('../' + getProp('STORE_FILE'))
             storePassword getProp('STORE_PASSWORD')
             keyAlias getProp('KEY_ALIAS')
             keyPassword getProp('KEY_PASSWORD')
@@ -51,5 +51,5 @@ dependencies {
 }
 
 def getProp(keyName) {
-    project.hasProperty(keyName) ? keyName : System.getenv(keyName)
+    project.hasProperty(keyName) ? project[keyName] : System.getenv(keyName)
 }
