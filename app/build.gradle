@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply from: 'https://raw.githubusercontent.com/walfud/PutToMaven/v1.0.0/base.gradle'
 
 def MAJOR_VERSION = 1
 def MINOR_VERSION = 0
@@ -48,8 +49,4 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':library')
-}
-
-def getProp(keyName) {
-    project.hasProperty(keyName) ? project[keyName] : System.getenv(keyName)
 }
