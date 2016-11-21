@@ -12,6 +12,8 @@ public class ResponseCheckUpdate {
 
     public Data data;
 
+    public transient int result;
+
     @Keep
     public static class Data {
         public String update;           // "none/full/delta"

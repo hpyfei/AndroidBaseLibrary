@@ -23,6 +23,7 @@ import com.licaigc.rxjava.SimpleEasySubscriber;
 import com.licaigc.view.ViewUtils;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Response;
@@ -41,7 +42,11 @@ public class UpdateUtils {
     public static final String TAG = "UpdateUtils";
 
     private static IUpdate getUpdateInterface() {
-        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(1, TimeUnit.MINUTES)
+                .readTimeout(1, TimeUnit.MINUTES)
+                .writeTimeout(1, TimeUnit.MINUTES)
+                .build();
         Retrofit retrofit = new Retrofit.Builder()
                 .client(okHttpClient)
                 .baseUrl("http://v.guihua.com/v1/")
@@ -139,10 +144,9 @@ public class UpdateUtils {
                         // 返回值详情: http://www.tuluu.com/platform/ymir/wikis/home
                         if (response.code() == 200) {
                             // 没更新
-                            if (onCheckUpdate != null) {
-                                onCheckUpdate.onFinish(OnCheckUpdate.NO_UPDATE);
-                            }
-                            return Observable.empty();
+                            final ResponseCheckUpdate responseCheckUpdate = response.body();
+                            responseCheckUpdate.result = OnCheckUpdate.NO_UPDATE;
+                            return Observable.just(responseCheckUpdate);
                         } else if (response.code() == 222) {
                             // 有更新
                             final ResponseCheckUpdate responseCheckUpdate = response.body();
@@ -164,95 +168,88 @@ public class UpdateUtils {
                                                 }
                                                 return responseCheckUpdate;
                                             }
+                                        })
+                                        .map(new Func1<ResponseCheckUpdate, ResponseCheckUpdate>() {
+                                            @Override
+                                            public ResponseCheckUpdate call(final ResponseCheckUpdate responseCheckUpdate) {
+                                                final Dialog dialog = new Dialog(context);
+                                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                                dialog.setContentView(R.layout.dialog_check_update);
+                                                TextView titleTv = ViewUtils.findViewById(dialog, R.id.tv_title);
+                                                TextView descTv = ViewUtils.findViewById(dialog, R.id.tv_desc);
+                                                ImageView picIv = ViewUtils.findViewById(dialog, R.id.iv_pic);
+                                                Button okBtn = ViewUtils.findViewById(dialog, R.id.btn_ok);
+                                                Button cancelBtn = ViewUtils.findViewById(dialog, R.id.btn_cancel);
+
+                                                titleTv.setText(responseCheckUpdate.data.title);
+                                                descTv.setText(responseCheckUpdate.data.desc);
+                                                if (responseCheckUpdate.data.pic != null) {
+                                                    picIv.setImageBitmap(responseCheckUpdate.data.pic);
+                                                } else {
+                                                    // 下载图片失败, 则隐藏图片改用短样式
+                                                    picIv.setVisibility(View.GONE);
+                                                }
+                                                okBtn.setBackgroundColor(AndroidBaseLibrary.getPrimaryColor());
+                                                if (responseCheckUpdate.data.force) {
+                                                    cancelBtn.setVisibility(View.GONE);
+                                                    dialog.setCancelable(false);
+                                                }
+                                                okBtn.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        NetworkUtils.downloadBySystem(responseCheckUpdate.data.url, new File(appContext.getExternalCacheDir(), responseCheckUpdate.data.md5), new NetworkUtils.OnDownloadBySystem() {
+                                                            @Override
+                                                            public void onFinish(boolean suc, File file) {
+                                                                if (suc) {
+                                                                    PackageUtils.installPackage(file);
+                                                                }
+                                                            }
+                                                        });
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+                                                cancelBtn.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                                dialog.show();
+                                                return responseCheckUpdate;
+                                            }
                                         });
                             } else {
-                                if (onCheckUpdate != null) {
-                                    onCheckUpdate.onFinish(OnCheckUpdate.CANCEL);
-                                }
-                                return Observable.empty();
+                                responseCheckUpdate.result = OnCheckUpdate.CANCEL;
+                                return Observable.just(responseCheckUpdate);
                             }
                         } else if (response.code() == 400) {
                             // 客户端错误
-                            if (onCheckUpdate != null) {
-                                onCheckUpdate.onFinish(OnCheckUpdate.ERROR);
-                            }
                             return Observable.error(new RuntimeException(response.body().message));
-                        } else if (response.code() == 500){
+                        } else if (response.code() == 500) {
                             // 服务器内部错误
-                            if (onCheckUpdate != null) {
-                                onCheckUpdate.onFinish(OnCheckUpdate.ERROR);
-                            }
                             return Observable.error(new RuntimeException("服务器正在维护, 请稍后再试..."));
                         } else {
                             // 不支持的 status code 或者
-                            if (onCheckUpdate != null) {
-                                onCheckUpdate.onFinish(OnCheckUpdate.ERROR);
-                            }
                             return Observable.error(new RuntimeException(String.format("不支持的 status code (%d)", response.code())));
                         }
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(new Func1<ResponseCheckUpdate, Void>() {
+                .subscribe(new SimpleEasySubscriber<ResponseCheckUpdate>() {
                     @Override
-                    public Void call(final ResponseCheckUpdate responseCheckUpdate) {
-                        final Dialog dialog = new Dialog(context);
-                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        dialog.setContentView(R.layout.dialog_check_update);
-                        TextView titleTv = ViewUtils.findViewById(dialog, R.id.tv_title);
-                        TextView descTv = ViewUtils.findViewById(dialog, R.id.tv_desc);
-                        ImageView picIv = ViewUtils.findViewById(dialog, R.id.iv_pic);
-                        Button okBtn = ViewUtils.findViewById(dialog, R.id.btn_ok);
-                        Button cancelBtn = ViewUtils.findViewById(dialog, R.id.btn_cancel);
+                    public void onFinish(boolean suc, ResponseCheckUpdate result, Throwable throwable) {
+                        super.onFinish(suc, result, throwable);
 
-                        titleTv.setText(responseCheckUpdate.data.title);
-                        descTv.setText(responseCheckUpdate.data.desc);
-                        if (responseCheckUpdate.data.pic != null) {
-                            picIv.setImageBitmap(responseCheckUpdate.data.pic);
+                        if (suc) {
+                            if (onCheckUpdate != null) {
+                                onCheckUpdate.onFinish(result.result);
+                            }
                         } else {
-                            // 下载图片失败, 则隐藏图片改用短样式
-                            picIv.setVisibility(View.GONE);
-                        }
-                        okBtn.setBackgroundColor(AndroidBaseLibrary.getPrimaryColor());
-                        if (responseCheckUpdate.data.force) {
-                            cancelBtn.setVisibility(View.GONE);
-                            dialog.setCancelable(false);
-                        }
-                        okBtn.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                NetworkUtils.downloadBySystem(responseCheckUpdate.data.url, new File(appContext.getExternalCacheDir(), responseCheckUpdate.data.md5), new NetworkUtils.OnDownloadBySystem() {
-                                    @Override
-                                    public void onFinish(boolean suc, File file) {
-                                        if (suc) {
-                                            PackageUtils.installPackage(file);
-                                        }
-                                    }
-                                });
-                                dialog.dismiss();
-
-                                if (onCheckUpdate != null) {
-                                    onCheckUpdate.onFinish(OnCheckUpdate.USER_OK);
-                                }
+                            if (onCheckUpdate != null) {
+                                onCheckUpdate.onFinish(OnCheckUpdate.ERROR);
                             }
-                        });
-                        cancelBtn.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog.cancel();
-
-                                if (onCheckUpdate != null) {
-                                    onCheckUpdate.onFinish(OnCheckUpdate.USER_CANCEL);
-                                }
-                            }
-                        });
-                        dialog.show();
-                        return null;
+                        }
                     }
-                })
-                .subscribe(new SimpleEasySubscriber<Void>());
+                });
     }
-
-    //
-
 }
