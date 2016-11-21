@@ -105,4 +105,4 @@ dependencies {
     compile 'com.umeng.analytics:analytics:6.0.4'
 }
 
-apply from: 'https://raw.githubusercontent.com/walfud/PutToMaven/v2.2.0/jcenter.gradle'
+apply from: 'https://raw.githubusercontent.com/walfud/PutToMaven/v2.2.1/jcenter.gradle'
