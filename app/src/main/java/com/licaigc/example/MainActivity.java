@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.licaigc.AndroidBaseLibrary;
-import com.licaigc.trace.Track;
 import com.licaigc.update.UpdateUtils;
 
 public class MainActivity extends Activity {
@@ -35,11 +34,11 @@ public class MainActivity extends Activity {
                     @Override
                     public void onFinish(int result) {
                         Log.e(TAG, String.valueOf(result));
-                        Toast.makeText(MainActivity.this, "onFinish", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "onFinish: " + result, Toast.LENGTH_SHORT).show();
                     }
                 });
 
-                Track.onActivate(null, null);
+//                Track.onActivate(null, null);
 //                Track.onLogin("999");
 //                Log.e("", ManifestUtils.getMeta("UMENG_CHANNEL"));
             }
