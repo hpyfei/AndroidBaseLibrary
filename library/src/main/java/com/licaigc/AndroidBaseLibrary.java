@@ -6,7 +6,6 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.licaigc.android.ManifestUtils;
 import com.licaigc.android.PackageUtils;
 import com.licaigc.lang.Transformer;
 import com.licaigc.trace.Track;
@@ -55,12 +54,7 @@ public class AndroidBaseLibrary {
 
     /**
      *  主线程调用
-     * @param context
-     * @return
      */
-    public static final boolean initialize(Context context) {
-        return initialize(context, false, ManifestUtils.getMeta("UMENG_CHANNEL"));
-    }
     public static final boolean initialize(Context context, boolean isDebug, final String channel) {
         sContext = context.getApplicationContext();
         sIsDebug = isDebug;
