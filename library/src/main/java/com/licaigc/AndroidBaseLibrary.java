@@ -118,6 +118,7 @@ public class AndroidBaseLibrary {
         } else {
             sAppId = Constants.APP_ID_UNKNOWN;
             sPrimaryColor = Constants.APP_PRIMARY_COLOR_UNKNOWN;
+            umengAppKey = Constants.UMENG_APPKEY_ANDROIDBASELIBRARY;
         }
 
         // JPush
@@ -126,6 +127,7 @@ public class AndroidBaseLibrary {
         sHandler.sendEmptyMessage(MSG_JPUSH_ALIAS);
 
         // 友盟统计
+        MobclickAgent.setDebugMode(isDebug);
         MobclickAgent.startWithConfigure(new MobclickAgent.UMAnalyticsConfig(context, umengAppKey, channel, MobclickAgent.EScenarioType.E_UM_NORMAL, false));
 
         return true;
