@@ -1,14 +1,13 @@
 package com.licaigc.example;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
 import com.licaigc.AndroidBaseLibrary;
-import com.licaigc.android.BaseActivity;
-import com.umeng.analytics.MobclickAgent;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends Activity {
     public static final String TAG = "MainActivity";
 
     private Button mBtn;
@@ -39,8 +38,6 @@ public class MainActivity extends BaseActivity {
 //                Track.onActivate(null, null);
 //                Track.onLogin("999");
 //                Log.e("", ManifestUtils.getMeta("UMENG_CHANNEL"));
-
-                MobclickAgent.onEvent(MainActivity.this, "test");
             }
         });
 

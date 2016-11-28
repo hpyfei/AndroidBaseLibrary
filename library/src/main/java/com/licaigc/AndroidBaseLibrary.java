@@ -9,7 +9,6 @@ import android.util.Log;
 import com.licaigc.android.PackageUtils;
 import com.licaigc.lang.Transformer;
 import com.licaigc.trace.Track;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -95,40 +94,30 @@ public class AndroidBaseLibrary {
             }
         };
 
-        String umengAppKey = null;
         String pkgName = AndroidBaseLibrary.getContext().getPackageName();
         if (false) {
             // Stub
         } else if (Constants.PKG_TALICAI.equals(pkgName)) {
             sAppId = Constants.APP_ID_TALICAI;
             sPrimaryColor = Constants.APP_PRIMARY_COLOR_TALICAI;
-            umengAppKey = Constants.UMENG_APPKEY_TALICAI;
         } else if (Constants.PKG_GUIHUA.equals(pkgName)) {
             sAppId = Constants.APP_ID_GUIHUA;
             sPrimaryColor = Constants.APP_PRIMARY_COLOR_GUIHUA;
-            umengAppKey = Constants.UMENG_APPKEY_GUIHUA;
         } else if (Constants.PKG_TIMI.equals(pkgName)) {
             sAppId = Constants.APP_ID_TIMI;
             sPrimaryColor = Constants.APP_PRIMARY_COLOR_TIMI;
-            umengAppKey = Constants.UMENG_APPKEY_TIMI;
         } else if (Constants.PKG_JIJINDOU.equals(pkgName)) {
             sAppId = Constants.APP_ID_JIJINDOU;
             sPrimaryColor = Constants.APP_PRIMARY_COLOR_JIJINDOU;
-            umengAppKey = Constants.UMENG_APPKEY_JIJINDOU;
         } else {
             sAppId = Constants.APP_ID_UNKNOWN;
             sPrimaryColor = Constants.APP_PRIMARY_COLOR_UNKNOWN;
-            umengAppKey = Constants.UMENG_APPKEY_ANDROIDBASELIBRARY;
         }
 
         // JPush
         JPushInterface.stopCrashHandler(context);
         JPushInterface.init(context); // 初始化 JPush
         sHandler.sendEmptyMessage(MSG_JPUSH_ALIAS);
-
-        // 友盟统计
-        MobclickAgent.setDebugMode(isDebug);
-        MobclickAgent.startWithConfigure(new MobclickAgent.UMAnalyticsConfig(context, umengAppKey, channel, MobclickAgent.EScenarioType.E_UM_NORMAL, false));
 
         return true;
     }

@@ -38,11 +38,4 @@ public class Constants {
     public static final int APP_PRIMARY_COLOR_GUIHUA    = 0xFF6192B3;
     public static final int APP_PRIMARY_COLOR_TIMI      = 0xFFF5A623;
     public static final int APP_PRIMARY_COLOR_JIJINDOU  = 0xFFDA5162;
-
-    // 友盟 APP_KEY
-    public static final String UMENG_APPKEY_ANDROIDBASELIBRARY  = "58364d9dbbea8354a20000fa";
-    public static final String UMENG_APPKEY_TALICAI  = "5292dbff56240b905810d1bc";
-    public static final String UMENG_APPKEY_GUIHUA   = "55ac9d63e0f55a7dff002835";
-    public static final String UMENG_APPKEY_TIMI     = "52f990dc56240b235d129333";
-    public static final String UMENG_APPKEY_JIJINDOU = "55c0446567e58eb30200162b";
 }

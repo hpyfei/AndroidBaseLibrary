@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply from: 'https://raw.githubusercontent.com/walfud/PutToMaven/v1.0.0/base.gradle'
 
 def MAJOR_VERSION = 1
 def MINOR_VERSION = 0
@@ -49,4 +48,18 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':library')
+//    compile 'com.licaigc:androidbaselibrary:1.2.9'
+}
+
+
+/**
+ * 1. Get from `project`  (Variables in 'gradle.properties')
+ * 2. If not found, try from environment
+ */
+def getPropWithDefault(keyName, defaultValue) {
+    def prop = project.hasProperty(keyName) ? project.getProperty(keyName) : System.getenv(keyName)
+    prop ? prop : defaultValue
+}
+def getProp(keyName) {
+    getPropWithDefault(keyName, '')
 }
