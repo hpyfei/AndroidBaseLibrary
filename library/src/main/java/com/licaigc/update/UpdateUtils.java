@@ -157,6 +157,7 @@ public class UpdateUtils {
                             }
                             if (conti) {
                                 return NetworkUtils.get(responseCheckUpdate.data.image)
+                                        .subscribeOn(Schedulers.io())
                                         .observeOn(Schedulers.io())
                                         .map(new Func1<byte[], ResponseCheckUpdate>() {
                                             @Override
@@ -169,6 +170,7 @@ public class UpdateUtils {
                                                 return responseCheckUpdate;
                                             }
                                         })
+                                        .observeOn(AndroidSchedulers.mainThread())
                                         .map(new Func1<ResponseCheckUpdate, ResponseCheckUpdate>() {
                                             @Override
                                             public ResponseCheckUpdate call(final ResponseCheckUpdate responseCheckUpdate) {
