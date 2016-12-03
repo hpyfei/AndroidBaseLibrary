@@ -17,7 +17,7 @@ plugins {
 
 def MAJOR_VERSION = 1
 def MINOR_VERSION = 3
-def PATCH_VERSION = 1
+def PATCH_VERSION = 2
 
 def VERSION_CODE = MAJOR_VERSION * 100 + MINOR_VERSION * 10 + PATCH_VERSION
 def VERSION_NAME = MAJOR_VERSION + '.' + MINOR_VERSION + '.' + PATCH_VERSION
@@ -60,6 +60,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+    maven { url "https://jitpack.io" }
 }
 
 def SUPPORT_VERSION='23.3.0'
