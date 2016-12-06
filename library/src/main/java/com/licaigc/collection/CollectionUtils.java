@@ -6,9 +6,11 @@ import com.licaigc.lang.ObjectUtils;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -140,5 +142,36 @@ public class CollectionUtils {
         }
 
         return filtered;
+    }
+
+    /**
+     * Fast create and initialize
+     */
+    public static <T> List<T> newArrayList(T... ts) {
+        List<T> list = new ArrayList<>();
+        if (ts != null) {
+            for (T t : ts) {
+                list.add(t);
+            }
+        }
+        return list;
+    }
+
+    public static <K, V> Map<K, V> newHashMap(Object... objs) {
+        Map<K, V> m = new HashMap<>();
+        if (objs == null || objs.length % 2 != 0) {
+            return m;
+        }
+
+        for (int i = 0; i < objs.length; i += 2) {
+            int j = i + 1;
+
+            K k = (K) objs[i];
+            V v = (V) objs[j];
+
+            m.put(k, v);
+        }
+
+        return m;
     }
 }

@@ -3,13 +3,14 @@ package com.licaigc.lang;
 import android.text.TextUtils;
 import android.util.Pair;
 
+import com.licaigc.collection.CollectionUtils;
+
 import java.io.File;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -230,22 +231,16 @@ public class Transformer {
     }
 
     // Other
+
+    /**
+     * @Deprecated Use {@link CollectionUtils#newHashMap(Object...)} instead
+     * @param objs
+     * @param <K>
+     * @param <V>
+     * @return
+     */
     public static <K, V> Map<K, V> asMap(Object... objs) {
-        Map<K, V> m = new HashMap<>();
-        if (objs == null || objs.length % 2 != 0) {
-            return m;
-        }
-
-        for (int i = 0; i < objs.length; i += 2) {
-            int j = i + 1;
-
-            K k = (K) objs[i];
-            V v = (V) objs[j];
-
-            m.put(k, v);
-        }
-
-        return m;
+        return CollectionUtils.newHashMap(objs);
     }
 
     public interface One2One<F, T> {
