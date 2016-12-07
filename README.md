@@ -1,3 +1,5 @@
+# STOP MAINTAINED! THE REPOSITORY HAS BEEN TRANSFORMED TO INTERNAL SERVER!
+
 # AndroidBaseLibrary [![Build Status](https://travis-ci.org/wealthworks/AndroidBaseLibrary.svg?branch=master)](https://travis-ci.org/wealthworks/AndroidBaseLibrary) [![jcenter](https://raw.githubusercontent.com/wealthworks/AndroidBaseLibrary/master/doc/jcenter.png)](https://bintray.com/licaigc/maven/androidbaselibrary)
 我场 Android 平台基础库. 部分代码 forked from [WallE](https://github.com/walfud/WallE). 部分功能进行了定制和删改. 遵循 Apache 2.0 协议.
 
